@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nft.mall.mapper.CollectDirMapper">
+
+    <resultMap type="com.nft.mall.domain.CollectDir" id="CollectDirResult">
+        <result property="collectDirId" column="collect_dir_id"/>
+        <result property="certificationId" column="certification_id"/>
+        <result property="tokenName" column="token_name"/>
+        <result property="tokenSymbol" column="token_symbol"/>
+        <result property="tokenImage" column="token_image"/>
+        <result property="shortUrl" column="short_url"/>
+        <result property="contractAddress" column="contract_address"/>
+        <result property="tradeHash" column="trade_hash"/>
+        <result property="tokenDesc" column="token_desc"/>
+        <result property="tokenType" column="token_type"/>
+        <result property="status" column="status"/>
+        <result property="createId" column="create_id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="selectCollectDirVo">
+        select collect_dir_id,
+               certification_id,
+               token_name,
+               token_symbol,
+               token_image,
+               short_url,
+               contract_address,
+               trade_hash,
+               token_desc,
+               token_type,
+               status,
+               create_id,
+               create_time,
+               update_time
+        from t_collect_dir
+    </sql>
+
+    <select id="selectCollectDirList" parameterType="com.nft.mall.domain.CollectDir" resultMap="CollectDirResult">
+        <include refid="selectCollectDirVo"/>
+        <where>
+            <if test="certificationId != null ">and certification_id = #{certificationId}</if>
+            <if test="tokenName != null  and tokenName != ''">and token_name like concat('%', #{tokenName}, '%')</if>
+            <if test="tokenSymbol != null  and tokenSymbol != ''">and token_symbol = #{tokenSymbol}</if>
+            <if test="tokenImage != null  and tokenImage != ''">and token_image = #{tokenImage}</if>
+            <if test="shortUrl != null  and shortUrl != ''">and short_url = #{shortUrl}</if>
+            <if test="contractAddress != null  and contractAddress != ''">and contract_address = #{contractAddress}</if>
+            <if test="tradeHash != null ">and trade_hash = #{tradeHash}</if>
+            <if test="tokenDesc != null  and tokenDesc != ''">and token_desc = #{tokenDesc}</if>
+            <if test="tokenType != null ">and token_type = #{tokenType}</if>
+            <if test="status != null ">and status = #{status}</if>
+            <if test="createId != null ">and create_id = #{createId}</if>
+        </where>
+        or certification_id = 0
+        order by create_time desc
+    </select>
+
+    <select id="selectCollectDirById" parameterType="Long" resultMap="CollectDirResult">
+        <include refid="selectCollectDirVo"/>
+        where collect_dir_id = #{collectDirId}
+    </select>
+
+    <insert id="insertCollectDir" parameterType="com.nft.mall.domain.CollectDir" useGeneratedKeys="true"
+            keyProperty="collectDirId">
+        insert into t_collect_dir
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="certificationId != null">certification_id,</if>
+            <if test="tokenName != null">token_name,</if>
+            <if test="tokenSymbol != null">token_symbol,</if>
+            <if test="tokenImage != null">token_image,</if>
+            <if test="shortUrl != null">short_url,</if>
+            <if test="contractAddress != null">contract_address,</if>
+            <if test="tradeHash != null">trade_hash,</if>
+            <if test="tokenDesc != null">token_desc,</if>
+            <if test="tokenType != null">token_type,</if>
+            <if test="status != null">status,</if>
+            <if test="createId != null">create_id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="certificationId != null">#{certificationId},</if>
+            <if test="tokenName != null">#{tokenName},</if>
+            <if test="tokenSymbol != null">#{tokenSymbol},</if>
+            <if test="tokenImage != null">#{tokenImage},</if>
+            <if test="shortUrl != null">#{shortUrl},</if>
+            <if test="contractAddress != null">#{contractAddress},</if>
+            <if test="tradeHash != null">#{tradeHash},</if>
+            <if test="tokenDesc != null">#{tokenDesc},</if>
+            <if test="tokenType != null">#{tokenType},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createId != null">#{createId},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateCollectDir" parameterType="com.nft.mall.domain.CollectDir">
+        update t_collect_dir
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="certificationId != null">certification_id = #{certificationId},</if>
+            <if test="tokenName != null">token_name = #{tokenName},</if>
+            <if test="tokenSymbol != null">token_symbol = #{tokenSymbol},</if>
+            <if test="tokenImage != null">token_image = #{tokenImage},</if>
+            <if test="shortUrl != null">short_url = #{shortUrl},</if>
+            <if test="contractAddress != null">contract_address = #{contractAddress},</if>
+            <if test="tradeHash != null">trade_hash = #{tradeHash},</if>
+            <if test="tokenDesc != null">token_desc = #{tokenDesc},</if>
+            <if test="tokenType != null">token_type = #{tokenType},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createId != null">create_id = #{createId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where collect_dir_id = #{collectDirId}
+    </update>
+
+    <delete id="deleteCollectDirById" parameterType="Long">
+        delete
+        from t_collect_dir
+        where collect_dir_id = #{collectDirId}
+    </delete>
+
+    <delete id="deleteCollectDirByIds" parameterType="String">
+        delete from t_collect_dir where collect_dir_id in
+        <foreach item="collectDirId" collection="array" open="(" separator="," close=")">
+            #{collectDirId}
+        </foreach>
+    </delete>
+
+    <select id="selectByCertificationIdAndNameAndType" resultMap="CollectDirResult">
+        <include refid="selectCollectDirVo"/>
+        where certification_id = #{certificationId}
+        and token_name = #{tokenName}
+        and token_type = #{tokenType}
+        limit 1
+    </select>
+
+    <select id="selectByContractAddress" resultMap="CollectDirResult">
+        <include refid="selectCollectDirVo"/>
+        where contract_address = #{contractAddress}
+        limit 1
+    </select>
+</mapper>

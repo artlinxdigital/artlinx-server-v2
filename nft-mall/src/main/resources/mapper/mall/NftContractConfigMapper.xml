@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nft.mall.mapper.NftContractConfigMapper">
+
+    <resultMap type="com.nft.mall.domain.NftContractConfig" id="NftContractConfigResult">
+        <result property="id" column="id"/>
+        <result property="buyerFee" column="buyer_fee"/>
+        <result property="sellerFee" column="seller_fee"/>
+        <result property="ipfsUrl" column="ipfs_url"/>
+        <result property="transferProxy" column="transfer_proxy"/>
+        <result property="transferProxyForDeprecated" column="transfer_proxy_for_deprecated"/>
+        <result property="erc20TransferProxy" column="erc20_transfer_proxy"/>
+        <result property="singSignAddress" column="sing_sign_address"/>
+        <result property="state" column="state"/>
+        <result property="exchangeV1" column="exchange_v1"/>
+        <result property="ordersHolder" column="orders_holder"/>
+        <result property="beneficiary" column="beneficiary"/>
+        <result property="buyerFeeSigner" column="buyer_fee_signer"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="selectNftContractConfigVo">
+        select id,
+               buyer_fee,
+               seller_fee,
+               ipfs_url,
+               transfer_proxy,
+               transfer_proxy_for_deprecated,
+               erc20_transfer_proxy,
+               state,
+               exchange_v1,
+               sing_sign_address,
+               orders_holder,
+               beneficiary,
+               buyer_fee_signer,
+               create_time,
+               update_time
+        from nft_contract_config
+    </sql>
+
+    <select id="selectNftContractConfigList" parameterType="com.nft.mall.domain.NftContractConfig"
+            resultMap="NftContractConfigResult">
+        <include refid="selectNftContractConfigVo"/>
+        <where>
+            <if test="buyerFee != null ">and buyer_fee = #{buyerFee}</if>
+            <if test="sellerFee != null ">and seller_fee = #{sellerFee}</if>
+            <if test="singSignAddress != null ">and sing_sign_address = #{singSignAddress}</if>
+            <if test="ipfsUrl != null  and ipfsUrl != ''">and ipfs_url = #{ipfsUrl}</if>
+            <if test="transferProxy != null  and transferProxy != ''">and transfer_proxy = #{transferProxy}</if>
+            <if test="transferProxyForDeprecated != null  and transferProxyForDeprecated != ''">and
+                transfer_proxy_for_deprecated = #{transferProxyForDeprecated}
+            </if>
+            <if test="erc20TransferProxy != null  and erc20TransferProxy != ''">and erc20_transfer_proxy =
+                #{erc20TransferProxy}
+            </if>
+            <if test="state != null  and state != ''">and state = #{state}</if>
+            <if test="exchangeV1 != null  and exchangeV1 != ''">and exchange_v1 = #{exchangeV1}</if>
+            <if test="ordersHolder != null  and ordersHolder != ''">and orders_holder = #{ordersHolder}</if>
+            <if test="beneficiary != null  and beneficiary != ''">and beneficiary = #{beneficiary}</if>
+            <if test="buyerFeeSigner != null  and buyerFeeSigner != ''">and buyer_fee_signer = #{buyerFeeSigner}</if>
+        </where>
+    </select>
+
+    <select id="selectNftContractConfigById" parameterType="Long" resultMap="NftContractConfigResult">
+        <include refid="selectNftContractConfigVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertNftContractConfig" parameterType="com.nft.mall.domain.NftContractConfig" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into nft_contract_config
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="buyerFee != null">buyer_fee,</if>
+            <if test="sellerFee != null">seller_fee,</if>
+            <if test="ipfsUrl != null">ipfs_url,</if>
+            <if test="transferProxy != null">transfer_proxy,</if>
+            <if test="transferProxyForDeprecated != null">transfer_proxy_for_deprecated,</if>
+            <if test="singSignAddress != null ">sing_sign_address,</if>
+            <if test="erc20TransferProxy != null">erc20_transfer_proxy,</if>
+            <if test="state != null">state,</if>
+            <if test="exchangeV1 != null">exchange_v1,</if>
+            <if test="ordersHolder != null">orders_holder,</if>
+            <if test="beneficiary != null">beneficiary,</if>
+            <if test="buyerFeeSigner != null">buyer_fee_signer,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="buyerFee != null">#{buyerFee},</if>
+            <if test="sellerFee != null">#{sellerFee},</if>
+            <if test="ipfsUrl != null">#{ipfsUrl},</if>
+            <if test="transferProxy != null">#{transferProxy},</if>
+            <if test="singSignAddress != null ">#{singSignAddress},</if>
+            <if test="transferProxyForDeprecated != null">#{transferProxyForDeprecated},</if>
+            <if test="erc20TransferProxy != null">#{erc20TransferProxy},</if>
+            <if test="state != null">#{state},</if>
+            <if test="exchangeV1 != null">#{exchangeV1},</if>
+            <if test="ordersHolder != null">#{ordersHolder},</if>
+            <if test="beneficiary != null">#{beneficiary},</if>
+            <if test="buyerFeeSigner != null">#{buyerFeeSigner},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateNftContractConfig" parameterType="com.nft.mall.domain.NftContractConfig">
+        update nft_contract_config
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="buyerFee != null">buyer_fee = #{buyerFee},</if>
+            <if test="sellerFee != null">seller_fee = #{sellerFee},</if>
+            <if test="ipfsUrl != null">ipfs_url = #{ipfsUrl},</if>
+            <if test="singSignAddress != null ">#{singSignAddress},</if>
+            <if test="transferProxy != null">transfer_proxy = #{transferProxy},</if>
+            <if test="transferProxyForDeprecated != null">transfer_proxy_for_deprecated =
+                #{transferProxyForDeprecated},
+            </if>
+            <if test="erc20TransferProxy != null">erc20_transfer_proxy = #{erc20TransferProxy},</if>
+            <if test="state != null">state = #{state},</if>
+            <if test="exchangeV1 != null">exchange_v1 = #{exchangeV1},</if>
+            <if test="ordersHolder != null">orders_holder = #{ordersHolder},</if>
+            <if test="singSignAddress != null ">sing_sign_address = #{singSignAddress},</if>
+            <if test="beneficiary != null">beneficiary = #{beneficiary},</if>
+            <if test="buyerFeeSigner != null">buyer_fee_signer = #{buyerFeeSigner},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNftContractConfigById" parameterType="Long">
+        delete
+        from nft_contract_config
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteNftContractConfigByIds" parameterType="String">
+        delete from nft_contract_config where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

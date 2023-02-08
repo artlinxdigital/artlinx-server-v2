@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nft.mall.mapper.ReleaseApplyMapper">
+
+    <resultMap type="com.nft.mall.domain.ReleaseApply" id="ReleaseApplyResult">
+        <result property="releaseApplyId"    column="release_apply_id"    />
+        <result property="certificationId"    column="certification_id"    />
+        <result property="refuseReason"    column="refuse_reason"    />
+        <result property="applyStatus"    column="apply_status"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectReleaseApplyVo">
+        select release_apply_id, certification_id, refuse_reason, apply_status, create_time, update_time from t_release_apply
+    </sql>
+
+    <select id="selectReleaseApplyList" parameterType="com.nft.mall.domain.ReleaseApply" resultMap="ReleaseApplyResult">
+        <include refid="selectReleaseApplyVo"/>
+        <where>
+            <if test="certificationId != null "> and certification_id = #{certificationId}</if>
+            <if test="refuseReason != null  and refuseReason != ''"> and refuse_reason = #{refuseReason}</if>
+            <if test="applyStatus != null "> and apply_status = #{applyStatus}</if>
+        </where>
+    </select>
+
+    <select id="selectReleaseApplyById" parameterType="Long" resultMap="ReleaseApplyResult">
+        <include refid="selectReleaseApplyVo"/>
+        where release_apply_id = #{releaseApplyId}
+    </select>
+
+    <insert id="insertReleaseApply" parameterType="com.nft.mall.domain.ReleaseApply" useGeneratedKeys="true" keyProperty="releaseApplyId">
+        insert into t_release_apply
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="certificationId != null">certification_id,</if>
+            <if test="refuseReason != null">refuse_reason,</if>
+            <if test="applyStatus != null">apply_status,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="certificationId != null">#{certificationId},</if>
+            <if test="refuseReason != null">#{refuseReason},</if>
+            <if test="applyStatus != null">#{applyStatus},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateReleaseApply" parameterType="com.nft.mall.domain.ReleaseApply">
+        update t_release_apply
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="certificationId != null">certification_id = #{certificationId},</if>
+            <if test="refuseReason != null">refuse_reason = #{refuseReason},</if>
+            <if test="applyStatus != null">apply_status = #{applyStatus},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where release_apply_id = #{releaseApplyId}
+    </update>
+
+    <delete id="deleteReleaseApplyById" parameterType="Long">
+        delete from t_release_apply where release_apply_id = #{releaseApplyId}
+    </delete>
+
+    <delete id="deleteReleaseApplyByIds" parameterType="String">
+        delete from t_release_apply where release_apply_id in
+        <foreach item="releaseApplyId" collection="array" open="(" separator="," close=")">
+            #{releaseApplyId}
+        </foreach>
+    </delete>
+
+    <select id="selectByCertificationId" resultMap="ReleaseApplyResult">
+        <include refid="selectReleaseApplyVo"/>
+        where certification_id = #{certificationId}
+        order by create_time desc
+        limit 1
+    </select>
+
+    <select id="selectByCertificationIdAndStatus" resultMap="ReleaseApplyResult">
+        <include refid="selectReleaseApplyVo"/>
+        where certification_id = #{certificationId} and apply_status = #{applyStatus}
+        limit 1
+    </select>
+</mapper>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nft.mall.mapper.ProductSellConfigMapper">
+
+    <resultMap type="com.nft.mall.domain.ProductSellConfig" id="ProductSellConfigResult">
+        <result property="productSellConfigId"    column="product_sell_config_id"    />
+        <result property="sellType"    column="sell_type"    />
+        <result property="createId"    column="create_id"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectProductSellConfigVo">
+        select product_sell_config_id, sell_type, create_id, create_time from t_product_sell_config
+    </sql>
+
+    <select id="selectProductSellConfigList" parameterType="com.nft.mall.domain.ProductSellConfig" resultMap="ProductSellConfigResult">
+        <include refid="selectProductSellConfigVo"/>
+        <where>
+            <if test="sellType != null "> and sell_type = #{sellType}</if>
+            <if test="createId != null "> and create_id = #{createId}</if>
+        </where>
+    </select>
+
+    <select id="selectProductSellConfigById" parameterType="Long" resultMap="ProductSellConfigResult">
+        <include refid="selectProductSellConfigVo"/>
+        where product_sell_config_id = #{productSellConfigId}
+    </select>
+
+    <insert id="insertProductSellConfig" parameterType="com.nft.mall.domain.ProductSellConfig" useGeneratedKeys="true" keyProperty="productSellConfigId">
+        insert into t_product_sell_config
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="sellType != null">sell_type,</if>
+            <if test="createId != null">create_id,</if>
+            <if test="createTime != null">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="sellType != null">#{sellType},</if>
+            <if test="createId != null">#{createId},</if>
+            <if test="createTime != null">#{createTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateProductSellConfig" parameterType="com.nft.mall.domain.ProductSellConfig">
+        update t_product_sell_config
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="sellType != null">sell_type = #{sellType},</if>
+            <if test="createId != null">create_id = #{createId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where product_sell_config_id = #{productSellConfigId}
+    </update>
+
+    <delete id="deleteProductSellConfigById" parameterType="Long">
+        delete from t_product_sell_config where product_sell_config_id = #{productSellConfigId}
+    </delete>
+
+    <delete id="deleteProductSellConfigByIds" parameterType="String">
+        delete from t_product_sell_config where product_sell_config_id in
+        <foreach item="productSellConfigId" collection="array" open="(" separator="," close=")">
+            #{productSellConfigId}
+        </foreach>
+    </delete>
+</mapper>

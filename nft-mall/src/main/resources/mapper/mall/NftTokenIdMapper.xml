@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nft.mall.mapper.NftTokenIdMapper">
+    
+    <resultMap type="com.nft.mall.domain.NftTokenId" id="NftTokenIdResult">
+        <result property="id"    column="id"    />
+        <result property="token"    column="token"    />
+        <result property="tokenId"    column="token_id"    />
+        <result property="assettype"    column="assetType"    />
+        <result property="owner"    column="owner"    />
+        <result property="saltValue"    column="salt_value"    />
+        <result property="saltType"    column="salt_type"    />
+        <result property="buyValue"    column="buy_value"    />
+        <result property="buyToken"    column="buy_token"    />
+        <result property="buyTokenId"    column="buy_token_id"    />
+        <result property="buyAssetType"    column="buy_asset_type"    />
+        <result property="value"    column="value"    />
+        <result property="signature"    column="signature"    />
+        <result property="signatureV"    column="signature_v"    />
+        <result property="signatureS"    column="signature_s"    />
+        <result property="signatureR"    column="signature_r"    />
+        <result property="updateDate"    column="update_date"    />
+        <result property="importantUpdateDate"    column="important_update_date"    />
+        <result property="updateStateDate"    column="update_state_date"    />
+        <result property="contractVersion"    column="contract_version"    />
+        <result property="fee"    column="fee"    />
+        <result property="sold"    column="sold"    />
+        <result property="canceld"    column="canceld"    />
+        <result property="buyPriceEth"    column="buy_price_eth"    />
+        <result property="version"    column="version"    />
+        <result property="buyPrice"    column="buy_price"    />
+        <result property="active"    column="active"    />
+        <result property="buyStock"    column="buy_stock"    />
+        <result property="sellPrice"    column="sell_price"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectNftTokenIdVo">
+        select id, token, token_id, assetType, owner, salt_value, salt_type, buy_value, buy_token, buy_token_id, buy_asset_type, value, signature, signature_v, signature_s, signature_r, update_date, important_update_date, update_state_date, contract_version, fee, sold, canceld, buy_price_eth, version, buy_price, active, buy_stock, sell_price, create_time, update_time from nft_token_id
+    </sql>
+
+    <select id="selectNftTokenIdList" parameterType="com.nft.mall.domain.NftTokenId" resultMap="NftTokenIdResult">
+        <include refid="selectNftTokenIdVo"/>
+        <where>  
+            <if test="token != null  and token != ''"> and token = #{token}</if>
+            <if test="tokenId != null "> and token_id = #{tokenId}</if>
+            <if test="assettype != null  and assettype != ''"> and assetType = #{assettype}</if>
+            <if test="owner != null  and owner != ''"> and owner = #{owner}</if>
+            <if test="saltValue != null  and saltValue != ''"> and salt_value = #{saltValue}</if>
+            <if test="saltType != null  and saltType != ''"> and salt_type = #{saltType}</if>
+            <if test="buyValue != null "> and buy_value = #{buyValue}</if>
+            <if test="buyToken != null  and buyToken != ''"> and buy_token = #{buyToken}</if>
+            <if test="buyTokenId != null  and buyTokenId != ''"> and buy_token_id = #{buyTokenId}</if>
+            <if test="buyAssetType != null  and buyAssetType != ''"> and buy_asset_type = #{buyAssetType}</if>
+            <if test="value != null "> and value = #{value}</if>
+            <if test="signature != null  and signature != ''"> and signature = #{signature}</if>
+            <if test="signatureV != null  and signatureV != ''"> and signature_v = #{signatureV}</if>
+            <if test="signatureS != null  and signatureS != ''"> and signature_s = #{signatureS}</if>
+            <if test="signatureR != null  and signatureR != ''"> and signature_r = #{signatureR}</if>
+            <if test="updateDate != null "> and update_date = #{updateDate}</if>
+            <if test="importantUpdateDate != null "> and important_update_date = #{importantUpdateDate}</if>
+            <if test="updateStateDate != null "> and update_state_date = #{updateStateDate}</if>
+            <if test="contractVersion != null "> and contract_version = #{contractVersion}</if>
+            <if test="fee != null "> and fee = #{fee}</if>
+            <if test="sold != null "> and sold = #{sold}</if>
+            <if test="canceld != null "> and canceld = #{canceld}</if>
+            <if test="buyPriceEth != null "> and buy_price_eth = #{buyPriceEth}</if>
+            <if test="version != null "> and version = #{version}</if>
+            <if test="buyPrice != null "> and buy_price = #{buyPrice}</if>
+            <if test="active != null "> and active = #{active}</if>
+            <if test="buyStock != null "> and buy_stock = #{buyStock}</if>
+            <if test="sellPrice != null "> and sell_price = #{sellPrice}</if>
+        </where>
+    </select>
+    
+    <select id="selectNftTokenIdById" parameterType="String" resultMap="NftTokenIdResult">
+        <include refid="selectNftTokenIdVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertNftTokenId" parameterType="com.nft.mall.domain.NftTokenId">
+        insert into nft_token_id
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="token != null">token,</if>
+            <if test="tokenId != null">token_id,</if>
+            <if test="assettype != null">assetType,</if>
+            <if test="owner != null">owner,</if>
+            <if test="saltValue != null">salt_value,</if>
+            <if test="saltType != null">salt_type,</if>
+            <if test="buyValue != null">buy_value,</if>
+            <if test="buyToken != null">buy_token,</if>
+            <if test="buyTokenId != null">buy_token_id,</if>
+            <if test="buyAssetType != null">buy_asset_type,</if>
+            <if test="value != null">value,</if>
+            <if test="signature != null">signature,</if>
+            <if test="signatureV != null">signature_v,</if>
+            <if test="signatureS != null">signature_s,</if>
+            <if test="signatureR != null">signature_r,</if>
+            <if test="updateDate != null">update_date,</if>
+            <if test="importantUpdateDate != null">important_update_date,</if>
+            <if test="updateStateDate != null">update_state_date,</if>
+            <if test="contractVersion != null">contract_version,</if>
+            <if test="fee != null">fee,</if>
+            <if test="sold != null">sold,</if>
+            <if test="canceld != null">canceld,</if>
+            <if test="buyPriceEth != null">buy_price_eth,</if>
+            <if test="version != null">version,</if>
+            <if test="buyPrice != null">buy_price,</if>
+            <if test="active != null">active,</if>
+            <if test="buyStock != null">buy_stock,</if>
+            <if test="sellPrice != null">sell_price,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="token != null">#{token},</if>
+            <if test="tokenId != null">#{tokenId},</if>
+            <if test="assettype != null">#{assettype},</if>
+            <if test="owner != null">#{owner},</if>
+            <if test="saltValue != null">#{saltValue},</if>
+            <if test="saltType != null">#{saltType},</if>
+            <if test="buyValue != null">#{buyValue},</if>
+            <if test="buyToken != null">#{buyToken},</if>
+            <if test="buyTokenId != null">#{buyTokenId},</if>
+            <if test="buyAssetType != null">#{buyAssetType},</if>
+            <if test="value != null">#{value},</if>
+            <if test="signature != null">#{signature},</if>
+            <if test="signatureV != null">#{signatureV},</if>
+            <if test="signatureS != null">#{signatureS},</if>
+            <if test="signatureR != null">#{signatureR},</if>
+            <if test="updateDate != null">#{updateDate},</if>
+            <if test="importantUpdateDate != null">#{importantUpdateDate},</if>
+            <if test="updateStateDate != null">#{updateStateDate},</if>
+            <if test="contractVersion != null">#{contractVersion},</if>
+            <if test="fee != null">#{fee},</if>
+            <if test="sold != null">#{sold},</if>
+            <if test="canceld != null">#{canceld},</if>
+            <if test="buyPriceEth != null">#{buyPriceEth},</if>
+            <if test="version != null">#{version},</if>
+            <if test="buyPrice != null">#{buyPrice},</if>
+            <if test="active != null">#{active},</if>
+            <if test="buyStock != null">#{buyStock},</if>
+            <if test="sellPrice != null">#{sellPrice},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNftTokenId" parameterType="com.nft.mall.domain.NftTokenId">
+        update nft_token_id
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="token != null">token = #{token},</if>
+            <if test="tokenId != null">token_id = #{tokenId},</if>
+            <if test="assettype != null">assetType = #{assettype},</if>
+            <if test="owner != null">owner = #{owner},</if>
+            <if test="saltValue != null">salt_value = #{saltValue},</if>
+            <if test="saltType != null">salt_type = #{saltType},</if>
+            <if test="buyValue != null">buy_value = #{buyValue},</if>
+            <if test="buyToken != null">buy_token = #{buyToken},</if>
+            <if test="buyTokenId != null">buy_token_id = #{buyTokenId},</if>
+            <if test="buyAssetType != null">buy_asset_type = #{buyAssetType},</if>
+            <if test="value != null">value = #{value},</if>
+            <if test="signature != null">signature = #{signature},</if>
+            <if test="signatureV != null">signature_v = #{signatureV},</if>
+            <if test="signatureS != null">signature_s = #{signatureS},</if>
+            <if test="signatureR != null">signature_r = #{signatureR},</if>
+            <if test="updateDate != null">update_date = #{updateDate},</if>
+            <if test="importantUpdateDate != null">important_update_date = #{importantUpdateDate},</if>
+            <if test="updateStateDate != null">update_state_date = #{updateStateDate},</if>
+            <if test="contractVersion != null">contract_version = #{contractVersion},</if>
+            <if test="fee != null">fee = #{fee},</if>
+            <if test="sold != null">sold = #{sold},</if>
+            <if test="canceld != null">canceld = #{canceld},</if>
+            <if test="buyPriceEth != null">buy_price_eth = #{buyPriceEth},</if>
+            <if test="version != null">version = #{version},</if>
+            <if test="buyPrice != null">buy_price = #{buyPrice},</if>
+            <if test="active != null">active = #{active},</if>
+            <if test="buyStock != null">buy_stock = #{buyStock},</if>
+            <if test="sellPrice != null">sell_price = #{sellPrice},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNftTokenIdById" parameterType="String">
+        delete from nft_token_id where id = #{id}
+    </delete>
+
+    <delete id="deleteNftTokenIdByIds" parameterType="String">
+        delete from nft_token_id where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectByContractAddress" parameterType="String" resultMap="NftTokenIdResult">
+        <include refid="selectNftTokenIdVo"/>
+        where token = #{contractAddress}
+        order by create_time desc
+    </select>
+
+</mapper>

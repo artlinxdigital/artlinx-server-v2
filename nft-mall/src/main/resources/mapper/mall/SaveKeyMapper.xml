@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nft.mall.mapper.SaveKeyMapper">
+
+    <resultMap type="com.nft.mall.domain.SaveKey" id="SaveKeyResult">
+        <result property="saveKeyId"    column="save_key_id"    />
+        <result property="certificationId"    column="certification_id"    />
+        <result property="privateKey"    column="private_key"    />
+        <result property="privatePass"    column="private_pass"    />
+        <result property="createId"    column="create_id"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectSaveKeyVo">
+        select save_key_id, certification_id, private_key, private_pass, create_id, create_time from t_save_key
+    </sql>
+
+    <select id="selectSaveKeyList" parameterType="com.nft.mall.domain.SaveKey" resultMap="SaveKeyResult">
+        <include refid="selectSaveKeyVo"/>
+        <where>
+            <if test="certificationId != null "> and certification_id = #{certificationId}</if>
+            <if test="privateKey != null  and privateKey != ''"> and private_key = #{privateKey}</if>
+            <if test="privatePass != null  and privatePass != ''"> and private_pass = #{privatePass}</if>
+            <if test="createId != null "> and create_id = #{createId}</if>
+        </where>
+    </select>
+
+    <select id="selectSaveKeyById" parameterType="Long" resultMap="SaveKeyResult">
+        <include refid="selectSaveKeyVo"/>
+        where save_key_id = #{saveKeyId}
+    </select>
+
+    <insert id="insertSaveKey" parameterType="com.nft.mall.domain.SaveKey" useGeneratedKeys="true" keyProperty="saveKeyId">
+        insert into t_save_key
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="certificationId != null">certification_id,</if>
+            <if test="privateKey != null">private_key,</if>
+            <if test="privatePass != null">private_pass,</if>
+            <if test="createId != null">create_id,</if>
+            <if test="createTime != null">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="certificationId != null">#{certificationId},</if>
+            <if test="privateKey != null">#{privateKey},</if>
+            <if test="privatePass != null">#{privatePass},</if>
+            <if test="createId != null">#{createId},</if>
+            <if test="createTime != null">#{createTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateSaveKey" parameterType="com.nft.mall.domain.SaveKey">
+        update t_save_key
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="certificationId != null">certification_id = #{certificationId},</if>
+            <if test="privateKey != null">private_key = #{privateKey},</if>
+            <if test="privatePass != null">private_pass = #{privatePass},</if>
+            <if test="createId != null">create_id = #{createId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where save_key_id = #{saveKeyId}
+    </update>
+
+    <delete id="deleteSaveKeyById" parameterType="Long">
+        delete from t_save_key where save_key_id = #{saveKeyId}
+    </delete>
+
+    <delete id="deleteSaveKeyByIds" parameterType="String">
+        delete from t_save_key where save_key_id in
+        <foreach item="saveKeyId" collection="array" open="(" separator="," close=")">
+            #{saveKeyId}
+        </foreach>
+    </delete>
+
+    <select id="selectByCertificationId" resultMap="SaveKeyResult">
+        <include refid="selectSaveKeyVo"/>
+        where certification_id = #{certificationId}
+        order by create_time desc
+        limit 1
+    </select>
+
+    <update id="updateByCertificationId" parameterType="com.nft.mall.domain.SaveKey">
+        update t_save_key
+        set private_key = #{privateKey,jdbcType=VARCHAR},
+        private_pass = #{privatePass,jdbcType=VARCHAR}
+        where certification_id = #{certificationId,jdbcType=INTEGER}
+    </update>
+
+    <!-- 获得该账户下托管的私钥 -->
+    <select id="listSaveKeyById" resultMap="SaveKeyResult">
+        <include refid="selectSaveKeyVo"/>
+        where certification_id = #{certificationId}
+    </select>
+</mapper>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nft.mall.mapper.BalanceMapper">
+
+    <resultMap type="com.nft.mall.domain.Balance" id="ChargeResult">
+        <result property="id"    column="id"    />
+        <result property="certificationId"    column="certification_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="balance"    column="balance"    />
+
+        <result property="userName"    column="userName"    />
+        <result property="account"    column="account"    />
+        <result property="bankCard"    column="bankCard"    />
+    </resultMap>
+
+    <sql id="selectChargeVo">
+        select id, certification_id, create_time, update_time,balance from t_balance
+    </sql>
+
+    <select id="selectBalanceList" parameterType="com.nft.mall.domain.Balance" resultMap="ChargeResult">
+        select
+        tb.id,
+        tb.certification_id,
+        tb.balance,
+        tb.create_time,
+        tb.update_time,
+        ce.real_name as userName,
+        ce.mobile as account,
+        cb.account_number as bankCard,
+        cb.country as country,
+        cb.account_type as accountType,
+        cb.account_name as accountName,
+        cb.bank_name as bankName,
+        cb.account_currency as accountCurrency,
+        cb.bank_swift_code as bankSwiftCode,
+        cb.local_bank_code as localBankCode,
+        cb.contact_address as contactAddress,
+        cb.city as city,
+        cb.street as street
+        from t_balance tb
+        left join t_certification ce on ce.id = tb.certification_id
+        left join t_certification_bank cb on cb.certification_id = tb.certification_id
+        <where>
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="certificationId != null "> and tb.certification_id = #{certificationId}</if>
+            <if test="userName != null "> and ce.real_name like concat('%', #{userName}, '%')</if>
+            <if test="account != null "> and ce.mobile like concat('%', #{account}, '%')</if>
+            <if test="bankCard != null "> and cb.account_number like concat('%', #{bankCard}, '%')</if>
+            <if test="country != null "> and cb.country like concat('%', #{country}, '%')</if>
+            <if test="accountType != null "> and cb.account_type = #{accountType}</if>
+            <if test="accountName != null "> and cb.account_name like concat('%', #{accountName}, '%')</if>
+            <if test="bankName != null "> and cb.bank_name like concat('%', #{bankName}, '%')</if>
+            and tb.balance > 0
+        </where>
+    </select>
+
+    <select id="selectBalanceByUserId" parameterType="Long" resultMap="ChargeResult">
+        <include refid="selectChargeVo"/>
+        where certification_id = #{certificationId} limit 1
+    </select>
+
+    <insert id="insertBalance" parameterType="com.nft.mall.domain.Balance" keyProperty="id" useGeneratedKeys="true">
+        insert into t_balance
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="balance != null">balance,</if>
+            <if test="certificationId != null">certification_id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="balance != null">#{balance},</if>
+            <if test="certificationId != null">#{certificationId},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+
+        </trim>
+    </insert>
+
+    <update id="updateBalance" parameterType="com.nft.mall.domain.Balance">
+        update t_balance
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="balance != null">balance = #{balance},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+<!--    <delete id="deleteBalanceById" parameterType="String">-->
+<!--        delete from t_balance where id = #{id}-->
+<!--    </delete>-->
+
+<!--    <delete id="deleteBalanceByIds" parameterType="String">-->
+<!--        delete from t_balance where id in-->
+<!--        <foreach item="id" collection="array" open="(" separator="," close=")">-->
+<!--            #{id}-->
+<!--        </foreach>-->
+<!--    </delete>-->
+
+</mapper>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nft.mall.mapper.RoughRecordMapper">
+
+    <resultMap type="com.nft.mall.domain.RoughRecord" id="RoughRecordResult">
+        <result property="roughRecordId"    column="rough_record_id"    />
+        <result property="certificationId"    column="certification_id"    />
+        <result property="address"    column="address"    />
+        <result property="amount"    column="amount"    />
+        <result property="hash"    column="hash"    />
+        <result property="rewardFrom"    column="reward_from"    />
+        <result property="status"    column="status"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectRoughRecordVo">
+        select
+            rough_record_id,
+            certification_id,
+            address,
+            amount,
+            hash,
+            reward_from,
+            status,
+            create_time,
+            update_time
+        from t_rough_record
+    </sql>
+
+    <select id="selectRoughRecordList" parameterType="com.nft.mall.domain.RoughRecord" resultMap="RoughRecordResult">
+        <include refid="selectRoughRecordVo"/>
+        <where>
+            <if test="certificationId != null "> and certification_id = #{certificationId}</if>
+            <if test="address != null  and address != ''"> and address = #{address}</if>
+            <if test="amount != null "> and amount = #{amount}</if>
+            <if test="hash != null  and hash != ''"> and hash = #{hash}</if>
+            <if test="rewardFrom != null "> and reward_from = #{rewardFrom}</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+
+    <select id="selectRoughRecordById" parameterType="Long" resultMap="RoughRecordResult">
+        <include refid="selectRoughRecordVo"/>
+        where rough_record_id = #{roughRecordId}
+    </select>
+
+    <insert id="insertRoughRecord" parameterType="com.nft.mall.domain.RoughRecord" useGeneratedKeys="true" keyProperty="roughRecordId">
+        insert into t_rough_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="certificationId != null">certification_id,</if>
+            <if test="address != null and address != ''">address,</if>
+            <if test="amount != null">amount,</if>
+            <if test="hash != null and hash != ''">hash,</if>
+            <if test="rewardFrom != null">reward_from,</if>
+            <if test="status != null">status,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="certificationId != null">#{certificationId},</if>
+            <if test="address != null and address != ''">#{address},</if>
+            <if test="amount != null">#{amount},</if>
+            <if test="hash != null and hash != ''">#{hash},</if>
+            <if test="rewardFrom != null">#{rewardFrom},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateRoughRecord" parameterType="com.nft.mall.domain.RoughRecord">
+        update t_rough_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="certificationId != null">certification_id = #{certificationId},</if>
+            <if test="address != null and address != ''">address = #{address},</if>
+            <if test="amount != null">amount = #{amount},</if>
+            <if test="hash != null and hash != ''">hash = #{hash},</if>
+            <if test="rewardFrom != null">reward_from = #{rewardFrom},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where rough_record_id = #{roughRecordId}
+    </update>
+
+    <delete id="deleteRoughRecordById" parameterType="Long">
+        delete from t_rough_record where rough_record_id = #{roughRecordId}
+    </delete>
+
+    <delete id="deleteRoughRecordByIds" parameterType="String">
+        delete from t_rough_record where rough_record_id in
+        <foreach item="roughRecordId" collection="array" open="(" separator="," close=")">
+            #{roughRecordId}
+        </foreach>
+    </delete>
+</mapper>

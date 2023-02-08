@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nft.system.mapper.SysCertificationMapper">
+
+    <resultMap type="com.nft.system.domain.SysCertification" id="SysCertificationResult">
+        <result property="id"    column="id"    />
+        <result property="realName"    column="real_name"    />
+        <result property="number"    column="number"    />
+        <result property="mobile"    column="mobile"    />
+        <result property="country"    column="country"    />
+        <result property="frontImageUrl"    column="front_image_url"    />
+        <result property="backImageUrl"    column="back_image_url"    />
+        <result property="certType"    column="cert_type"    />
+        <result property="auditContent"    column="audit_content"    />
+        <result property="type"    column="type"    />
+        <result property="status"    column="status"    />
+        <result property="url"    column="url"    />
+        <result property="bizToken"    column="biz_token"    />
+        <result property="walletAddress"    column="wallet_address"    />
+        <result property="publicKey"    column="public_key"    />
+        <result property="signatureUrl"    column="signature_url"    />
+        <result property="realApplyTime"    column="real_apply_time"    />
+        <result property="realAuditTime"    column="real_audit_time"    />
+        <result property="rzTime"    column="rz_time"    />
+        <result property="myCode"    column="my_code"    />
+        <result property="otherCode"    column="other_code"    />
+        <result property="releaseStatus"    column="release_status"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectSysCertificationVo">
+        select
+            id,
+            real_name,
+            number,
+            mobile,
+            country,
+            front_image_url,
+            back_image_url,
+            cert_type,
+            audit_content,
+            type,
+            status,
+            url,
+            biz_token,
+            wallet_address,
+            public_key,
+            signature_url,
+            real_apply_time,
+            real_audit_time,
+            rz_time,
+            my_code,
+            other_code,
+            release_status,
+            create_time,
+            update_time
+        from t_certification
+    </sql>
+
+    <select id="selectSysCertificationList" parameterType="com.nft.system.domain.SysCertification" resultMap="SysCertificationResult">
+        <include refid="selectSysCertificationVo"/>
+        <where>
+            <if test="realName != null  and realName != ''"> and real_name like concat('%', #{realName}, '%')</if>
+            <if test="number != null  and number != ''"> and number = #{number}</if>
+            <if test="mobile != null  and mobile != ''"> and mobile = #{mobile}</if>
+            <if test="country != null  and country != ''"> and country = #{country}</if>
+            <if test="frontImageUrl != null  and frontImageUrl != ''"> and front_image_url = #{frontImageUrl}</if>
+            <if test="backImageUrl != null  and backImageUrl != ''"> and back_image_url = #{backImageUrl}</if>
+            <if test="certType != null  and certType != ''"> and cert_type = #{certType}</if>
+            <if test="auditContent != null  and auditContent != ''"> and audit_content = #{auditContent}</if>
+            <if test="type != null "> and type = #{type}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="url != null  and url != ''"> and url = #{url}</if>
+            <if test="bizToken != null  and bizToken != ''"> and biz_token = #{bizToken}</if>
+            <if test="walletAddress != null  and walletAddress != ''"> and wallet_address = #{walletAddress}</if>
+            <if test="publicKey != null  and publicKey != ''"> and public_key = #{publicKey}</if>
+            <if test="signatureUrl != null  and signatureUrl != ''"> and signature_url = #{signatureUrl}</if>
+            <if test="realApplyTime != null "> and real_apply_time = #{realApplyTime}</if>
+            <if test="realAuditTime != null "> and real_audit_time = #{realAuditTime}</if>
+            <if test="rzTime != null "> and rz_time = #{rzTime}</if>
+            <if test="myCode != null  and myCode != ''"> and my_code = #{myCode}</if>
+            <if test="otherCode != null  and otherCode != ''"> and other_code = #{otherCode}</if>
+            <if test="releaseStatus != null "> and release_status = #{releaseStatus}</if>
+        </where>
+    </select>
+
+    <select id="selectSysCertificationById" parameterType="Long" resultMap="SysCertificationResult">
+        <include refid="selectSysCertificationVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSysCertification" parameterType="com.nft.system.domain.SysCertification" useGeneratedKeys="true" keyProperty="id">
+        insert into t_certification
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="realName != null">real_name,</if>
+            <if test="number != null">number,</if>
+            <if test="mobile != null">mobile,</if>
+            <if test="country != null">country,</if>
+            <if test="frontImageUrl != null">front_image_url,</if>
+            <if test="backImageUrl != null">back_image_url,</if>
+            <if test="certType != null">cert_type,</if>
+            <if test="auditContent != null">audit_content,</if>
+            <if test="type != null">type,</if>
+            <if test="status != null">status,</if>
+            <if test="url != null">url,</if>
+            <if test="bizToken != null">biz_token,</if>
+            <if test="walletAddress != null">wallet_address,</if>
+            <if test="publicKey != null">public_key,</if>
+            <if test="signatureUrl != null">signature_url,</if>
+            <if test="realApplyTime != null">real_apply_time,</if>
+            <if test="realAuditTime != null">real_audit_time,</if>
+            <if test="rzTime != null">rz_time,</if>
+            <if test="myCode != null">my_code,</if>
+            <if test="otherCode != null">other_code,</if>
+            <if test="releaseStatus != null">release_status,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="realName != null">#{realName},</if>
+            <if test="number != null">#{number},</if>
+            <if test="mobile != null">#{mobile},</if>
+            <if test="country != null">#{country},</if>
+            <if test="frontImageUrl != null">#{frontImageUrl},</if>
+            <if test="backImageUrl != null">#{backImageUrl},</if>
+            <if test="certType != null">#{certType},</if>
+            <if test="auditContent != null">#{number},</if>
+            <if test="type != null">#{type},</if>
+            <if test="status != null">#{status},</if>
+            <if test="url != null">#{url},</if>
+            <if test="bizToken != null">#{bizToken},</if>
+            <if test="walletAddress != null">#{walletAddress},</if>
+            <if test="publicKey != null">#{publicKey},</if>
+            <if test="signatureUrl != null">#{signatureUrl},</if>
+            <if test="realApplyTime != null">#{realApplyTime},</if>
+            <if test="realAuditTime != null">#{realAuditTime},</if>
+            <if test="rzTime != null">#{rzTime},</if>
+            <if test="myCode != null">#{myCode},</if>
+            <if test="otherCode != null">#{otherCode},</if>
+            <if test="releaseStatus != null">#{releaseStatus},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateSysCertification" parameterType="com.nft.system.domain.SysCertification">
+        update t_certification
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="realName != null">real_name = #{realName},</if>
+            <if test="number != null">number = #{number},</if>
+            <if test="mobile != null">mobile = #{mobile},</if>
+            <if test="country != null">country = #{country},</if>
+            <if test="frontImageUrl != null">front_image_url = #{frontImageUrl},</if>
+            <if test="backImageUrl != null">back_image_url = #{backImageUrl},</if>
+            <if test="certType != null">cert_type = #{certType},</if>
+            <if test="auditContent != null">audit_content = #{auditContent},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="url != null">url = #{url},</if>
+            <if test="bizToken != null">biz_token = #{bizToken},</if>
+            <if test="walletAddress != null">wallet_address = #{walletAddress},</if>
+            <if test="publicKey != null">public_key = #{publicKey},</if>
+            <if test="signatureUrl != null">signature_url = #{signatureUrl},</if>
+            <if test="realApplyTime != null">real_apply_time = #{realApplyTime},</if>
+            <if test="realAuditTime != null">real_audit_time = #{realAuditTime},</if>
+            <if test="rzTime != null">rz_time = #{rzTime},</if>
+            <if test="myCode != null">my_code = #{myCode},</if>
+            <if test="otherCode != null">other_code = #{otherCode},</if>
+            <if test="releaseStatus != null">release_status = #{releaseStatus},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysCertificationById" parameterType="Long">
+        delete from t_certification where id = #{id}
+    </delete>
+
+    <delete id="deleteSysCertificationByIds" parameterType="String">
+        delete from t_certification where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectByCertificationIdSet" parameterType="Long" resultMap="SysCertificationResult">
+        <include refid="selectSysCertificationVo"/> where id in
+        <foreach item="certificationId" collection="certificationIdSet" open="(" separator="," close=")">
+            #{certificationId}
+        </foreach>
+    </select>
+
+    <update id="updateReleaseStatusByCertificationIdSet">
+        update t_certification
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="releaseStatus != null">release_status = #{releaseStatus},</if>
+        </trim>
+        where id in
+        <foreach item="certificationId" collection="certificationIdSet" open="(" separator="," close=")">
+            #{certificationId}
+        </foreach>
+    </update>
+</mapper>

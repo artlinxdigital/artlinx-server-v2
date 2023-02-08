@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nft.mall.mapper.CertificationBankMapper">
+
+    <resultMap type="com.nft.mall.domain.CertificationBank" id="CertificationBankResult">
+        <result property="certificationBankId"    column="certification_bank_id"    />
+        <result property="certificationId"    column="certification_id"    />
+        <result property="realName"    column="real_name"    />
+        <result property="idNumber"    column="id_number"    />
+        <result property="email"    column="email"    />
+        <result property="accountName"    column="account_name"    />
+        <result property="country"    column="country"    />
+        <result property="bankName"    column="bank_name"    />
+        <result property="accountNumber"    column="account_number"    />
+        <result property="accountCurrency"    column="account_currency"    />
+        <result property="accountType"    column="account_type"    />
+        <result property="bankSwiftCode"    column="bank_swift_code"    />
+        <result property="localBankCode"    column="local_bank_code"    />
+        <result property="contactAddress"    column="contact_address"    />
+        <result property="city"    column="city"    />
+        <result property="street"    column="street"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectCertificationBankVo">
+        select certification_bank_id, certification_id, real_name, id_number, email, account_name, country, bank_name, account_number, account_currency, account_type, bank_swift_code, local_bank_code, contact_address, city, street, create_time, update_time from t_certification_bank
+    </sql>
+
+    <select id="selectCertificationBankList" parameterType="com.nft.mall.domain.CertificationBank" resultMap="CertificationBankResult">
+        <include refid="selectCertificationBankVo"/>
+        <where>
+            <if test="certificationId != null "> and certification_id = #{certificationId}</if>
+            <if test="realName != null  and realName != ''"> and real_name like concat('%', #{realName}, '%')</if>
+            <if test="idNumber != null  and idNumber != ''"> and id_number = #{idNumber}</if>
+            <if test="email != null  and email != ''"> and email = #{email}</if>
+            <if test="accountName != null  and accountName != ''"> and account_name like concat('%', #{accountName}, '%')</if>
+            <if test="country != null  and country != ''"> and country = #{country}</if>
+            <if test="bankName != null  and bankName != ''"> and bank_name like concat('%', #{bankName}, '%')</if>
+            <if test="accountNumber != null  and accountNumber != ''"> and account_number = #{accountNumber}</if>
+            <if test="accountCurrency != null  and accountCurrency != ''"> and account_currency = #{accountCurrency}</if>
+            <if test="accountType != null "> and account_type = #{accountType}</if>
+            <if test="bankSwiftCode != null  and bankSwiftCode != ''"> and bank_swift_code = #{bankSwiftCode}</if>
+            <if test="localBankCode != null  and localBankCode != ''"> and local_bank_code = #{localBankCode}</if>
+            <if test="contactAddress != null  and contactAddress != ''"> and contact_address = #{contactAddress}</if>
+            <if test="city != null  and city != ''"> and city = #{city}</if>
+            <if test="street != null  and street != ''"> and street = #{street}</if>
+        </where>
+    </select>
+
+    <select id="selectCertificationBankById" parameterType="Long" resultMap="CertificationBankResult">
+        <include refid="selectCertificationBankVo"/>
+        where certification_bank_id = #{certificationBankId}
+    </select>
+
+    <insert id="insertCertificationBank" parameterType="com.nft.mall.domain.CertificationBank" useGeneratedKeys="true" keyProperty="certificationBankId">
+        insert into t_certification_bank
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="certificationId != null">certification_id,</if>
+            <if test="realName != null">real_name,</if>
+            <if test="idNumber != null">id_number,</if>
+            <if test="email != null">email,</if>
+            <if test="accountName != null">account_name,</if>
+            <if test="country != null">country,</if>
+            <if test="bankName != null">bank_name,</if>
+            <if test="accountNumber != null">account_number,</if>
+            <if test="accountCurrency != null">account_currency,</if>
+            <if test="accountType != null">account_type,</if>
+            <if test="bankSwiftCode != null">bank_swift_code,</if>
+            <if test="localBankCode != null">local_bank_code,</if>
+            <if test="contactAddress != null">contact_address,</if>
+            <if test="city != null">city,</if>
+            <if test="street != null">street,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="certificationId != null">#{certificationId},</if>
+            <if test="realName != null">#{realName},</if>
+            <if test="idNumber != null">#{idNumber},</if>
+            <if test="email != null">#{email},</if>
+            <if test="accountName != null">#{accountName},</if>
+            <if test="country != null">#{country},</if>
+            <if test="bankName != null">#{bankName},</if>
+            <if test="accountNumber != null">#{accountNumber},</if>
+            <if test="accountCurrency != null">#{accountCurrency},</if>
+            <if test="accountType != null">#{accountType},</if>
+            <if test="bankSwiftCode != null">#{bankSwiftCode},</if>
+            <if test="localBankCode != null">#{localBankCode},</if>
+            <if test="contactAddress != null">#{contactAddress},</if>
+            <if test="city != null">#{city},</if>
+            <if test="street != null">#{street},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateCertificationBank" parameterType="com.nft.mall.domain.CertificationBank">
+        update t_certification_bank
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="certificationId != null">certification_id = #{certificationId},</if>
+            <if test="realName != null">real_name = #{realName},</if>
+            <if test="idNumber != null">id_number = #{idNumber},</if>
+            <if test="email != null">email = #{email},</if>
+            <if test="accountName != null">account_name = #{accountName},</if>
+            <if test="country != null">country = #{country},</if>
+            <if test="bankName != null">bank_name = #{bankName},</if>
+            <if test="accountNumber != null">account_number = #{accountNumber},</if>
+            <if test="accountCurrency != null">account_currency = #{accountCurrency},</if>
+            <if test="accountType != null">account_type = #{accountType},</if>
+            <if test="bankSwiftCode != null">bank_swift_code = #{bankSwiftCode},</if>
+            <if test="localBankCode != null">local_bank_code = #{localBankCode},</if>
+            <if test="contactAddress != null">contact_address = #{contactAddress},</if>
+            <if test="city != null">city = #{city},</if>
+            <if test="street != null">street = #{street},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where certification_bank_id = #{certificationBankId}
+    </update>
+
+    <delete id="deleteCertificationBankById" parameterType="Long">
+        delete from t_certification_bank where certification_bank_id = #{certificationBankId}
+    </delete>
+
+    <delete id="deleteCertificationBankByIds" parameterType="String">
+        delete from t_certification_bank where certification_bank_id in
+        <foreach item="certificationBankId" collection="array" open="(" separator="," close=")">
+            #{certificationBankId}
+        </foreach>
+    </delete>
+</mapper>

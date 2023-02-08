@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nft.mall.mapper.TInquiryRecordMapper">
+  <resultMap id="BaseResultMap" type="com.nft.mall.domain.TInquiryRecord">
+    <!--@mbg.generated -->
+    <!--@Table t_inquiry_record -->
+    <!-- generated on Fri Mar 04 17:01:47 CST 2022 -->
+    <id column="inquiry_record_id" jdbcType="BIGINT" property="inquiryRecordId" />
+    <result column="inquiry_certification_id" jdbcType="BIGINT" property="inquiryCertificationId" />
+    <result column="inquiry_account" jdbcType="VARCHAR" property="inquiryAccount" />
+    <result column="product_id" jdbcType="BIGINT" property="productId" />
+    <result column="deal_status" jdbcType="INTEGER" property="dealStatus" />
+    <result column="record_status" jdbcType="INTEGER" property="recordStatus" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated -->
+    inquiry_record_id, inquiry_certification_id, inquiry_account, product_id, deal_status, 
+    record_status, create_time, update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--@mbg.generated -->
+    select 
+    <include refid="Base_Column_List" />
+    from t_inquiry_record
+    where inquiry_record_id = #{inquiryRecordId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--@mbg.generated -->
+    delete from t_inquiry_record
+    where inquiry_record_id = #{inquiryRecordId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" keyColumn="inquiry_record_id" keyProperty="inquiryRecordId" parameterType="com.nft.mall.domain.TInquiryRecord" useGeneratedKeys="true">
+    <!--@mbg.generated -->
+    insert into t_inquiry_record (inquiry_certification_id, inquiry_account, 
+      product_id, deal_status, record_status, 
+      create_time, update_time)
+    values (#{inquiryCertificationId,jdbcType=BIGINT}, #{inquiryAccount,jdbcType=VARCHAR}, 
+      #{productId,jdbcType=BIGINT}, #{dealStatus,jdbcType=INTEGER}, #{recordStatus,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" keyColumn="inquiry_record_id" keyProperty="inquiryRecordId" parameterType="com.nft.mall.domain.TInquiryRecord" useGeneratedKeys="true">
+    <!--@mbg.generated -->
+    insert into t_inquiry_record
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="inquiryCertificationId != null">
+        inquiry_certification_id,
+      </if>
+      <if test="inquiryAccount != null">
+        inquiry_account,
+      </if>
+      <if test="productId != null">
+        product_id,
+      </if>
+      <if test="dealStatus != null">
+        deal_status,
+      </if>
+      <if test="recordStatus != null">
+        record_status,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="inquiryCertificationId != null">
+        #{inquiryCertificationId,jdbcType=BIGINT},
+      </if>
+      <if test="inquiryAccount != null">
+        #{inquiryAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="productId != null">
+        #{productId,jdbcType=BIGINT},
+      </if>
+      <if test="dealStatus != null">
+        #{dealStatus,jdbcType=INTEGER},
+      </if>
+      <if test="recordStatus != null">
+        #{recordStatus,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.nft.mall.domain.TInquiryRecord">
+    <!--@mbg.generated -->
+    update t_inquiry_record
+    <set>
+      <if test="inquiryCertificationId != null">
+        inquiry_certification_id = #{inquiryCertificationId,jdbcType=BIGINT},
+      </if>
+      <if test="inquiryAccount != null">
+        inquiry_account = #{inquiryAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="productId != null">
+        product_id = #{productId,jdbcType=BIGINT},
+      </if>
+      <if test="dealStatus != null">
+        deal_status = #{dealStatus,jdbcType=INTEGER},
+      </if>
+      <if test="recordStatus != null">
+        record_status = #{recordStatus,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where inquiry_record_id = #{inquiryRecordId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.nft.mall.domain.TInquiryRecord">
+    <!--@mbg.generated -->
+    update t_inquiry_record
+    set inquiry_certification_id = #{inquiryCertificationId,jdbcType=BIGINT},
+      inquiry_account = #{inquiryAccount,jdbcType=VARCHAR},
+      product_id = #{productId,jdbcType=BIGINT},
+      deal_status = #{dealStatus,jdbcType=INTEGER},
+      record_status = #{recordStatus,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where inquiry_record_id = #{inquiryRecordId,jdbcType=BIGINT}
+  </update>
+</mapper>

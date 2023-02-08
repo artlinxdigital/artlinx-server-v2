@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nft.mall.mapper.CertificationAttachMapper">
+
+    <resultMap type="com.nft.mall.domain.CertificationAttach" id="CertificationAttachResult">
+        <result property="certificationAttachId"    column="certification_attach_id"    />
+        <result property="certificationId"    column="certification_id"    />
+        <result property="nickName"    column="nick_name"    />
+        <result property="avatarUrl"    column="avatar_url"    />
+        <result property="balance"    column="balance"    />
+        <result property="integral"    column="integral"    />
+        <result property="introduction"    column="introduction"    />
+        <result property="status"    column="status"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectCertificationAttachVo">
+        select certification_attach_id, certification_id, nick_name, avatar_url, balance, integral, introduction, status, create_time, update_time from t_certification_attach
+    </sql>
+
+    <select id="selectCertificationAttachList" parameterType="com.nft.mall.domain.CertificationAttach" resultMap="CertificationAttachResult">
+        <include refid="selectCertificationAttachVo"/>
+        <where>
+            <if test="certificationId != null "> and certification_id = #{certificationId}</if>
+            <if test="nickName != null  and nickName != ''"> and nick_name like concat('%', #{nickName}, '%')</if>
+            <if test="avatarUrl != null  and avatarUrl != ''"> and avatar_url = #{avatarUrl}</if>
+            <if test="balance != null "> and balance = #{balance}</if>
+            <if test="integral != null "> and integral = #{integral}</if>
+            <if test="introduction != null  and introduction != ''"> and introduction = #{introduction}</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+
+    <select id="selectCertificationAttachById" parameterType="Long" resultMap="CertificationAttachResult">
+        <include refid="selectCertificationAttachVo"/>
+        where certification_attach_id = #{certificationAttachId}
+    </select>
+
+    <insert id="insertCertificationAttach" parameterType="com.nft.mall.domain.CertificationAttach" useGeneratedKeys="true" keyProperty="certificationAttachId">
+        insert into t_certification_attach
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="certificationId != null">certification_id,</if>
+            <if test="nickName != null">nick_name,</if>
+            <if test="avatarUrl != null">avatar_url,</if>
+            <if test="balance != null">balance,</if>
+            <if test="integral != null">integral,</if>
+            <if test="introduction != null">introduction,</if>
+            <if test="status != null">status,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="certificationId != null">#{certificationId},</if>
+            <if test="nickName != null">#{nickName},</if>
+            <if test="avatarUrl != null">#{avatarUrl},</if>
+            <if test="balance != null">#{balance},</if>
+            <if test="integral != null">#{integral},</if>
+            <if test="introduction != null">#{introduction},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateCertificationAttach" parameterType="com.nft.mall.domain.CertificationAttach">
+        update t_certification_attach
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="certificationId != null">certification_id = #{certificationId},</if>
+            <if test="nickName != null">nick_name = #{nickName},</if>
+            <if test="avatarUrl != null">avatar_url = #{avatarUrl},</if>
+            <if test="balance != null">balance = #{balance},</if>
+            <if test="integral != null">integral = #{integral},</if>
+            <if test="introduction != null">introduction = #{introduction},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where certification_attach_id = #{certificationAttachId}
+    </update>
+
+    <delete id="deleteCertificationAttachById" parameterType="Long">
+        delete from t_certification_attach where certification_attach_id = #{certificationAttachId}
+    </delete>
+
+    <delete id="deleteCertificationAttachByIds" parameterType="String">
+        delete from t_certification_attach where certification_attach_id in
+        <foreach item="certificationAttachId" collection="array" open="(" separator="," close=")">
+            #{certificationAttachId}
+        </foreach>
+    </delete>
+
+    <select id="selectByCertificationIdSet" parameterType="Long" resultMap="CertificationAttachResult">
+        <include refid="selectCertificationAttachVo"/> where certification_id in
+        <foreach item="certificationId" collection="certificationIdSet" open="(" separator="," close=")">
+            #{certificationId}
+        </foreach>
+    </select>
+ 
+</mapper>

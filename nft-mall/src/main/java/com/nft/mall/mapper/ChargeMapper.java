@@ -1,0 +1,71 @@
+package com.nft.mall.mapper;
+
+import java.util.List;
+import com.nft.mall.domain.Charge;
+import org.apache.ibatis.annotations.Param;
+
+/**
+ * 充值Mapper接口
+ *
+ * @author nft
+ * @date 2021-05-12
+ */
+public interface ChargeMapper
+{
+    /**
+     * 查询充值
+     *
+     * @param id 充值ID
+     * @return 充值
+     */
+    public Charge selectChargeById(String id);
+
+    /**
+     * 查询充值列表
+     *
+     * @param charge 充值
+     * @return 充值集合
+     */
+    public List<Charge> selectChargeList(Charge charge);
+
+    /**
+     * 新增充值
+     *
+     * @param charge 充值
+     * @return 结果
+     */
+    public int insertCharge(Charge charge);
+
+    /**
+     * 修改充值
+     *
+     * @param charge 充值
+     * @return 结果
+     */
+    public int updateCharge(Charge charge);
+
+    /**
+     * 删除充值
+     *
+     * @param id 充值ID
+     * @return 结果
+     */
+    public int deleteChargeById(String id);
+
+    /**
+     * 批量删除充值
+     *
+     * @param ids 需要删除的数据ID
+     * @return 结果
+     */
+    public int deleteChargeByIds(String[] ids);
+
+    /**
+     * 查询用户充值记录列表
+     *
+     * @param certificationId 用户ID
+     * @param status
+     * @return 结果
+     */
+    List<Charge> listByCertificationIdAndStatus(@Param("certificationId") Long certificationId, @Param("status") Integer status);
+}

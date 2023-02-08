@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nft.system.mapper.SysProductMapper">
+
+    <resultMap type="com.nft.system.domain.SysProduct" id="SysProductResult">
+        <result property="productId"    column="product_id"    />
+        <result property="productCategoryId"    column="product_category_id"    />
+        <result property="price"    column="price"    />
+        <result property="fileName"    column="file_name"    />
+        <result property="fileSuffix"    column="file_suffix"    />
+        <result property="coverImage"    column="cover_image"    />
+        <result property="productName"    column="product_name"    />
+        <result property="productAuthor"    column="product_author"    />
+        <result property="productImage"    column="product_image"    />
+        <result property="productDesc"    column="product_desc"    />
+        <result property="serviceRate"    column="service_rate"    />
+        <result property="copyrightRate"    column="copyright_rate"    />
+        <result property="favoriteCount"    column="favorite_count"    />
+        <result property="collectionCount"    column="collection_count"    />
+        <result property="productType"    column="product_type"    />
+        <result property="status"    column="status"    />
+        <result property="createId"    column="create_id"    />
+        <result property="parentProductId"    column="parent_product_id"    />
+        <result property="sourceProductId"    column="source_product_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectSysProductVo">
+        select product_id, product_category_id, price, file_name, file_suffix, cover_image, product_name, product_author, product_image, product_desc, service_rate, copyright_rate, favorite_count, collection_count, product_type, status, create_id, parent_product_id, source_product_id, create_time, update_time from t_product
+    </sql>
+
+    <select id="selectSysProductList" parameterType="com.nft.system.domain.SysProduct" resultMap="SysProductResult">
+        select product_id, p.product_category_id, price, file_name, file_suffix, cover_image, product_name, product_author, product_image, product_desc, service_rate, copyright_rate, favorite_count, collection_count, product_type, p.status, p.create_time from t_product p
+        left join t_product_category pc on p.product_category_id = pc.product_category_id
+        <where>
+            <if test="productCategoryId != null and productCategoryId > 0 "> and p.product_category_id = #{productCategoryId}</if>
+            <if test="productName != null  and productName != ''"> and p.product_name like concat('%', #{productName}, '%')</if>
+            <if test="productCategoryName != null  and productCategoryName != ''"> and pc.category_name like concat('%', #{productCategoryName}, '%')</if>
+            <if test="productAuthor != null  and productAuthor != ''"> and p.product_author = #{productAuthor}</if>
+            <if test="productImage != null  and productImage != ''"> and p.product_image = #{productImage}</if>
+            <if test="productDesc != null  and productDesc != ''"> and p.product_desc = #{productDesc}</if>
+            <if test="serviceRate != null "> and p.service_rate = #{serviceRate}</if>
+            <if test="copyrightRate != null "> and p.copyright_rate = #{copyrightRate}</if>
+            <if test="productType != null "> and p.product_type = #{productType}</if>
+            <if test="status != null "> and p.status = #{status}</if>
+            <if test="excludeStatusSet != null and excludeStatusSet.size() > 0">
+                and p.status not in
+                <foreach collection="excludeStatusSet" item="status" open="(" close=")" separator=",">
+                    #{status}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="selectSysProductById" parameterType="Long" resultMap="SysProductResult">
+        <include refid="selectSysProductVo"/>
+        where product_id = #{productId}
+    </select>
+
+    <insert id="insertSysProduct" parameterType="com.nft.system.domain.SysProduct" useGeneratedKeys="true" keyProperty="productId">
+        insert into t_product
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="productCategoryId != null">product_category_id,</if>
+            <if test="price != null">price,</if>
+            <if test="fileName != null and fileName != ''">file_name,</if>
+            <if test="fileSuffix != null and fileSuffix != ''">file_suffix,</if>
+            <if test="coverImage != null and coverImage != ''">cover_image,</if>
+            <if test="productName != null">product_name,</if>
+            <if test="productAuthor != null">product_author,</if>
+            <if test="productImage != null">product_image,</if>
+            <if test="productDesc != null">product_desc,</if>
+            <if test="serviceRate != null">service_rate,</if>
+            <if test="copyrightRate != null">copyright_rate,</if>
+            <if test="favoriteCount != null">favorite_count,</if>
+            <if test="collectionCount != null">collection_count,</if>
+            <if test="productType != null">product_type,</if>
+            <if test="status != null">status,</if>
+            <if test="createId != null">create_id,</if>
+            <if test="parentProductId != null">parent_product_id,</if>
+            <if test="sourceProductId != null">source_product_id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="productCategoryId != null">#{productCategoryId},</if>
+            <if test="price != null">#{price},</if>
+            <if test="fileName != null and fileName != ''">#{fileName},</if>
+            <if test="fileSuffix != null and fileSuffix != ''">#{fileSuffix},</if>
+            <if test="coverImage != null and coverImage != ''">#{coverImage},</if>
+            <if test="productName != null">#{productName},</if>
+            <if test="productAuthor != null">#{productAuthor},</if>
+            <if test="productImage != null">#{productImage},</if>
+            <if test="productDesc != null">#{productDesc},</if>
+            <if test="serviceRate != null">#{serviceRate},</if>
+            <if test="copyrightRate != null">#{copyrightRate},</if>
+            <if test="favoriteCount != null">#{favoriteCount},</if>
+            <if test="collectionCount != null">#{collectionCount},</if>
+            <if test="productType != null">#{productType},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createId != null">#{createId},</if>
+            <if test="parentProductId != null">#{parentProductId},</if>
+            <if test="sourceProductId != null">#{sourceProductId},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateSysProduct" parameterType="com.nft.system.domain.SysProduct">
+        update t_product
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="productCategoryId != null">product_category_id = #{productCategoryId},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="fileName != null and fileName != ''">file_name = #{fileName},</if>
+            <if test="fileSuffix != null and fileSuffix != ''">file_suffix = #{fileSuffix},</if>
+            <if test="coverImage != null and coverImage != ''">cover_image = #{coverImage},</if>
+            <if test="productName != null">product_name = #{productName},</if>
+            <if test="productAuthor != null">product_author = #{productAuthor},</if>
+            <if test="productImage != null">product_image = #{productImage},</if>
+            <if test="productDesc != null">product_desc = #{productDesc},</if>
+            <if test="serviceRate != null">service_rate = #{serviceRate},</if>
+            <if test="copyrightRate != null">copyright_rate = #{copyrightRate},</if>
+            <if test="favoriteCount != null">favorite_count = #{favoriteCount},</if>
+            <if test="collectionCount != null">collection_count = #{collectionCount},</if>
+            <if test="productType != null">product_type = #{productType},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createId != null">create_id = #{createId},</if>
+            <if test="parentProductId != null">parent_product_id = #{parentProductId},</if>
+            <if test="sourceProductId != null">source_product_id = #{sourceProductId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where product_id = #{productId}
+    </update>
+
+    <delete id="deleteSysProductById" parameterType="Long">
+        delete from t_product where product_id = #{productId}
+    </delete>
+
+    <delete id="deleteSysProductByIds" parameterType="String">
+        delete from t_product where product_id in
+        <foreach item="productId" collection="array" open="(" separator="," close=")">
+            #{productId}
+        </foreach>
+    </delete>
+
+    <update id="onOrOffSysProductByIds">
+        update t_product
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where product_id in
+        <foreach item="productId" collection="productIds" open="(" separator="," close=")">
+            #{productId}
+        </foreach>
+    </update>
+</mapper>

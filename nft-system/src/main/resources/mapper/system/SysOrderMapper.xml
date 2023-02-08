@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nft.system.mapper.SysOrderMapper">
+
+    <resultMap type="com.nft.system.domain.SysOrder" id="ProductTradeResult">
+        <result property="productTradeId"    column="product_trade_id"    />
+        <result property="productId"    column="product_id"    />
+        <result property="categoryId"    column="category_id"    />
+        <result property="tokenId"    column="token_id"    />
+        <result property="price"    column="price"    />
+        <result property="fromId"    column="from_id"    />
+        <result property="toId"    column="to_id"    />
+        <result property="fromAddress"    column="from_address"    />
+        <result property="toAddress"    column="to_address"    />
+        <result property="contractAddress"    column="contract_address"    />
+        <result property="tradeHash"    column="trade_hash"    />
+        <result property="tradeAmount"    column="trade_amount"    />
+        <result property="tradeFee"    column="trade_fee"    />
+        <result property="serviceRate"    column="service_rate"    />
+        <result property="copyrightRate"    column="copyright_rate"    />
+        <result property="status"    column="status"    />
+        <result property="createId"    column="create_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+
+        <result property="productName"    column="productName"    />
+        <result property="productAuthor"    column="productAuthor"    />
+        <result property="coverImage"    column="coverImage"    />
+        <result property="creator"    column="creator"    />
+        <result property="account"    column="account"    />
+        <result property="bankCard"    column="bankCard"    />
+    </resultMap>
+
+    <sql id="selectProductTradeVo">
+        select product_trade_id,
+               product_id,
+               category_id,
+               token_id,
+               price,
+               from_id,
+               to_id,
+               from_address,
+               to_address,
+               contract_address,
+               trade_hash,
+               trade_amount,
+               trade_fee,
+               service_rate,
+               copyright_rate,
+               status,
+               create_id,
+               create_time,
+               update_time
+        from t_product_trade
+    </sql>
+
+    <select id="selectSysOrderList" parameterType="com.nft.system.domain.SysOrder" resultMap="ProductTradeResult">
+        select product_trade_id,
+        pt.product_id,
+        pt.category_id,
+        pt.price,
+        pt.from_id,
+        to_id,
+        trade_amount,
+        trade_fee,
+        pt.status,
+        pt.create_id,
+        pt.create_time,
+        pt.update_time,
+        p.product_name as productName,
+        p.product_author as productAuthor,
+        p.cover_image as coverImage,
+        p.product_image as productImage,
+        ce.real_name as creator,
+        ce.mobile as account,
+        wc.bank_card as bankCard
+        from t_product_trade pt
+        left join t_product_category pc on pc.product_category_id = pt.category_id
+        left join t_product p on p.product_id = pt.product_id
+        left join t_certification ce on ce.id = pt.create_id
+        left join t_withdraw_config wc on wc.certification_id = pt.from_id
+        <where>
+            <if test="productId != null "> and product_id = #{productId}</if>
+            <if test="productName != null  and productName != ''"> and p.product_name like concat('%', #{productName}, '%')</if>
+            <if test="categoryId != null "> and category_id = #{categoryId}</if>
+            <if test="categoryName != null  and categoryName != ''"> and pc.category_name like concat('%', #{categoryName}, '%')</if>
+            <if test="productAuthor != null  and productAuthor != ''"> and p.product_author = #{productAuthor}</if>
+            <if test="creator != null  and creator != ''"> and ce.real_name = #{creator}</if>
+            <if test="account != null  and account != ''"> and ce.mobile = #{account}</if>
+            <if test="bankCard != null  and bankCard != ''"> and wc.bank_card = #{bankCard}</if>
+            <if test="tradeAmount != null "> and trade_amount = #{tradeAmount}</if>
+            <if test="tradeFee != null "> and trade_fee = #{tradeFee}</if>
+            <if test="status != null "> and pt.status = #{status}</if>
+            <if test="createId != null "> and pt.create_id = #{createId}</if>
+        </where>
+    </select>
+
+    <select id="selectSysOrderById" parameterType="Long" resultMap="ProductTradeResult">
+        <include refid="selectProductTradeVo"/>
+        where product_trade_id = #{sysOrderId}
+    </select>
+
+    <insert id="insertSysOrder" parameterType="com.nft.system.domain.SysOrder" useGeneratedKeys="true" keyProperty="productTradeId">
+        insert into t_product_trade
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="productId != null">product_id,</if>
+            <if test="categoryId != null">category_id,</if>
+            <if test="tokenId != null">token_id,</if>
+            <if test="price != null">price,</if>
+            <if test="fromId != null">from_id,</if>
+            <if test="toId != null">to_id,</if>
+            <if test="fromAddress != null">from_address,</if>
+            <if test="toAddress != null">to_address,</if>
+            <if test="contractAddress != null">contract_address,</if>
+            <if test="tradeHash != null">trade_hash,</if>
+            <if test="tradeAmount != null">trade_amount,</if>
+            <if test="tradeFee != null">trade_fee,</if>
+            <if test="serviceRate != null">service_rate,</if>
+            <if test="copyrightRate != null">copyright_rate,</if>
+            <if test="status != null">status,</if>
+            <if test="createId != null">create_id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="productId != null">#{productId},</if>
+            <if test="categoryId != null">#{categoryId},</if>
+            <if test="tokenId != null">#{tokenId},</if>
+            <if test="price != null">#{price},</if>
+            <if test="fromId != null">#{fromId},</if>
+            <if test="toId != null">#{toId},</if>
+            <if test="fromAddress != null">#{fromAddress},</if>
+            <if test="toAddress != null">#{toAddress},</if>
+            <if test="contractAddress != null">#{contractAddress},</if>
+            <if test="tradeHash != null">#{tradeHash},</if>
+            <if test="tradeAmount != null">#{tradeAmount},</if>
+            <if test="tradeFee != null">#{tradeFee},</if>
+            <if test="serviceRate != null">#{serviceRate},</if>
+            <if test="copyrightRate != null">#{copyrightRate},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createId != null">#{createId},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateSysOrder" parameterType="com.nft.system.domain.SysOrder">
+        update t_product_trade
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="productId != null">product_id = #{productId},</if>
+            <if test="categoryId != null">category_id = #{categoryId},</if>
+            <if test="tokenId != null">token_id = #{tokenId},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="fromId != null">from_id = #{fromId},</if>
+            <if test="toId != null">to_id = #{toId},</if>
+            <if test="fromAddress != null">from_address = #{fromAddress},</if>
+            <if test="toAddress != null">to_address = #{toAddress},</if>
+            <if test="contractAddress != null">contract_address = #{contractAddress},</if>
+            <if test="tradeHash != null">trade_hash = #{tradeHash},</if>
+            <if test="tradeAmount != null">trade_amount = #{tradeAmount},</if>
+            <if test="tradeFee != null">trade_fee = #{tradeFee},</if>
+            <if test="serviceRate != null">service_rate = #{serviceRate},</if>
+            <if test="copyrightRate != null">copyright_rate = #{copyrightRate},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createId != null">create_id = #{createId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where product_trade_id = #{productTradeId}
+    </update>
+
+    <delete id="deleteSysOrderById" parameterType="Long">
+        delete from t_product_trade where product_trade_id = #{sysOrderId}
+    </delete>
+
+    <delete id="deleteSysOrderByIds" parameterType="String">
+        delete from t_product_trade where product_trade_id in
+        <foreach item="sysOrderIds" collection="array" open="(" separator="," close=")">
+            #{sysOrderId}
+        </foreach>
+    </delete>
+
+    <select id="selectByCertificationIdSet" parameterType="Long" resultMap="ProductTradeResult">
+        <include refid="selectProductTradeVo"/> where create_id in
+        <foreach item="certificationId" collection="certificationIdSet" open="(" separator="," close=")">
+            #{certificationId}
+        </foreach>
+    </select>
+
+    <select id="selectByContractAddressAndTokenId"  resultMap="ProductTradeResult">
+        <include refid="selectProductTradeVo"/>
+        where contract_address = #{contractAddress} and token_id = #{tokenId}
+        order by create_time desc
+    </select>
+
+    <select id="selectByAddress"  resultMap="ProductTradeResult">
+        <include refid="selectProductTradeVo"/>
+        where from_address = #{address} or to_address = #{address}
+        order by create_time desc
+    </select>
+
+</mapper>

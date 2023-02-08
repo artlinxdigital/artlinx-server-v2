@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nft.system.mapper.SysMoneyHistoryMapper">
+
+    <resultMap type="com.nft.system.domain.SysMoneyHistory" id="SysMoneyHistoryResult">
+        <result property="id"    column="id"    />
+        <result property="money"    column="money"    />
+        <result property="type"    column="type"    />
+        <result property="certificationId"    column="certification_id"    />
+        <result property="address"    column="address"    />
+        <result property="status"    column="status"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="tradeId"    column="trade_id"    />
+        <result property="payExpireTime"    column="pay_expire_time"    />
+    </resultMap>
+
+    <sql id="selectSysMoneyHistoryVo">
+        select id, money, type, certification_id, address, status, create_time, update_time, trade_id, pay_expire_time from t_money_history
+    </sql>
+
+    <select id="selectSysMoneyHistoryList" parameterType="com.nft.system.domain.SysMoneyHistory" resultMap="SysMoneyHistoryResult">
+        select mh.id,
+            mh.money,
+            mh.type,
+            mh.certification_id,
+            mh.address,
+            mh.status,
+            mh.create_time,
+            mh.update_time,
+            mh.trade_id,
+            mh.pay_expire_time,
+            ce.real_name as userName,
+            ce.mobile as account
+        from t_money_history mh
+        left join t_certification ce on ce.id = mh.certification_id
+        <where>
+            <if test="money != null "> and mh.money = #{money}</if>
+            <if test="type != null "> and mh.type = #{type}</if>
+            <if test="certificationId != null "> and mh.certification_id = #{certificationId}</if>
+            <if test="address != null  and address != ''"> and mh.address = #{address}</if>
+            <if test="status != null "> and mh.status = #{status}</if>
+            <if test="tradeId != null "> and mh.trade_id = #{tradeId}</if>
+            <if test="payExpireTime != null "> and mh.pay_expire_time = #{payExpireTime}</if>
+            <if test="userName != null "> and ce.real_name like concat('%', #{userName}, '%')</if>
+            <if test="account != null "> and ce.mobile like concat('%', #{account}, '%')</if>
+        </where>
+    </select>
+
+    <select id="selectSysMoneyHistoryById" parameterType="String" resultMap="SysMoneyHistoryResult">
+        <include refid="selectSysMoneyHistoryVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSysMoneyHistory" parameterType="com.nft.system.domain.SysMoneyHistory">
+        insert into t_money_history
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="money != null">money,</if>
+            <if test="type != null">type,</if>
+            <if test="certificationId != null">certification_id,</if>
+            <if test="address != null">address,</if>
+            <if test="status != null">status,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="tradeId != null">trade_id,</if>
+            <if test="payExpireTime != null">pay_expire_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="money != null">#{money},</if>
+            <if test="type != null">#{type},</if>
+            <if test="certificationId != null">#{certificationId},</if>
+            <if test="address != null">#{address},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="tradeId != null">#{tradeId},</if>
+            <if test="payExpireTime != null">#{payExpireTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateSysMoneyHistory" parameterType="com.nft.system.domain.SysMoneyHistory">
+        update t_money_history
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="money != null">money = #{money},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="certificationId != null">certification_id = #{certificationId},</if>
+            <if test="address != null">address = #{address},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="tradeId != null">trade_id = #{tradeId},</if>
+            <if test="payExpireTime != null">pay_expire_time = #{payExpireTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysMoneyHistoryById" parameterType="String">
+        delete from t_money_history where id = #{id}
+    </delete>
+
+    <delete id="deleteSysMoneyHistoryByIds" parameterType="String">
+        delete from t_money_history where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

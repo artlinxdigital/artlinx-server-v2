@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nft.system.mapper.SysProductCategoryMapper">
+
+    <resultMap type="com.nft.system.domain.SysProductCategory" id="SysProductCategoryResult">
+        <result property="productCategoryId"    column="product_category_id"    />
+        <result property="categoryName"    column="category_name"    />
+        <result property="status"    column="status"    />
+        <result property="createId"    column="create_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectSysProductCategoryVo">
+        select product_category_id, category_name, status, create_id, create_time, update_time from t_product_category
+    </sql>
+
+    <select id="selectSysProductCategoryList" parameterType="com.nft.system.domain.SysProductCategory" resultMap="SysProductCategoryResult">
+        <include refid="selectSysProductCategoryVo"/>
+        <where>
+            <if test="categoryName != null  and categoryName != ''"> and category_name like concat('%', #{categoryName}, '%')</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="createId != null "> and create_id = #{createId}</if>
+        </where>
+    </select>
+
+    <select id="selectSysProductCategoryById" parameterType="Long" resultMap="SysProductCategoryResult">
+        <include refid="selectSysProductCategoryVo"/>
+        where product_category_id = #{productCategoryId}
+    </select>
+
+    <insert id="insertSysProductCategory" parameterType="com.nft.system.domain.SysProductCategory" useGeneratedKeys="true" keyProperty="productCategoryId">
+        insert into t_product_category
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="categoryName != null">category_name,</if>
+            <if test="status != null">status,</if>
+            <if test="createId != null">create_id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="categoryName != null">#{categoryName},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createId != null">#{createId},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateSysProductCategory" parameterType="com.nft.system.domain.SysProductCategory">
+        update t_product_category
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="categoryName != null">category_name = #{categoryName},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createId != null">create_id = #{createId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where product_category_id = #{productCategoryId}
+    </update>
+
+    <delete id="deleteSysProductCategoryById" parameterType="Long">
+        delete from t_product_category where product_category_id = #{productCategoryId}
+    </delete>
+
+    <delete id="deleteSysProductCategoryByIds" parameterType="String">
+        delete from t_product_category where product_category_id in
+        <foreach item="productCategoryId" collection="array" open="(" separator="," close=")">
+            #{productCategoryId}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nft.mall.mapper.MoneyHistoryMapper">
+
+    <resultMap type="com.nft.mall.domain.MoneyHistory" id="ChargeResult">
+        <result property="id"    column="id"    />
+        <result property="money"    column="money"    />
+        <result property="type"    column="type"    />
+        <result property="certificationId"    column="certification_id"    />
+        <result property="tradeId"    column="trade_id"    />
+        <result property="status"    column="status"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="payExpireTime"    column="pay_expire_time"    />
+    </resultMap>
+
+    <sql id="selectChargeVo">
+        select id, money, type, certification_id, status, pay_expire_time, create_time, update_time,trade_id from t_money_history
+    </sql>
+
+    <select id="selectChargeList" parameterType="com.nft.mall.domain.Charge" resultMap="ChargeResult">
+        <include refid="selectChargeVo"/>
+        <where>
+            <if test="money != null "> and money = #{money}</if>
+            <if test="type != null "> and type = #{type}</if>
+            <if test="certificationId != null "> and certification_id = #{certificationId}</if>
+            <if test="payExpireTime != null "> and pay_expire_time &lt; #{payExpireTime}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="tradeId != null "> and trade_id = #{tradeId}</if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectChargeById" parameterType="String" resultMap="ChargeResult">
+        <include refid="selectChargeVo"/>
+        where id = #{id}
+    </select>
+
+
+    <select id="selectMyHistoryOfUseful" parameterType="com.nft.mall.domain.MoneyHistory" resultMap="ChargeResult">
+        <include refid="selectChargeVo"/>
+        <where>
+            certification_id = #{certificationId}
+            <if test="type != null ">
+                and   id not in (select id  from t_money_history  where (type = 1 and status =1 )OR(type = 1 and status =3 ) )
+             </if>
+
+        </where>
+        order by create_time desc
+    </select>
+
+    <insert id="insertCharge" parameterType="com.nft.mall.domain.MoneyHistory">
+        insert into t_money_history
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="money != null">money,</if>
+            <if test="type != null">type,</if>
+            <if test="certificationId != null">certification_id,</if>
+            <if test="address != null">address,</if>
+            <if test="payExpireTime != null ">pay_expire_time,</if>
+            <if test="status != null">status,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="tradeId != null">trade_id,</if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="money != null">#{money},</if>
+            <if test="type != null">#{type},</if>
+            <if test="certificationId != null">#{certificationId},</if>
+            <if test="address != null">#{address},</if>
+            <if test="payExpireTime != null ">#{payExpireTime},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="tradeId != null">#{tradeId},</if>
+        </trim>
+    </insert>
+
+    <update id="updateCharge" parameterType="com.nft.mall.domain.MoneyHistory">
+        update t_money_history
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="money != null">money = #{money},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="certificationId != null">certification_id = #{certificationId},</if>
+            <if test="tradeId != null ">trade_id = #{tradeId},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="payExpireTime != null">pay_expire_time = #{payExpireTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteChargeById" parameterType="String">
+        delete from t_money_history where id = #{id}
+    </delete>
+
+    <delete id="deleteChargeByIds" parameterType="String">
+        delete from t_money_history where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="listByCertificationIdAndStatus" parameterType="Long" resultMap="ChargeResult">
+        <include refid="selectChargeVo"/>
+        <where>
+            <if test="certificationId != null and certificationId > 0 "> and certification_id = #{certificationId}</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+        order by create_time desc
+    </select>
+</mapper>

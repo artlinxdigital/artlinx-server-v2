@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nft.mall.mapper.BankConfigMapper">
+
+    <resultMap type="com.nft.mall.domain.BankConfig" id="BankConfigResult">
+        <result property="bankConfigId"    column="bank_config_id"    />
+        <result property="bankName"    column="bank_name"    />
+        <result property="bankIcon"    column="bank_icon"    />
+        <result property="bankKey"    column="bank_key"    />
+        <result property="bankType"    column="bank_type"    />
+        <result property="bankStyle"    column="bank_style"    />
+        <result property="status"    column="status"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectBankConfigVo">
+        select bank_config_id, bank_name, bank_icon, bank_key, bank_type, bank_style, status, create_time, update_time from t_bank_config
+    </sql>
+
+    <select id="selectBankConfigList" parameterType="com.nft.mall.domain.BankConfig" resultMap="BankConfigResult">
+        <include refid="selectBankConfigVo"/>
+        <where>
+            <if test="bankName != null  and bankName != ''"> and bank_name like concat('%', #{bankName}, '%')</if>
+            <if test="bankIcon != null  and bankIcon != ''"> and bank_icon = #{bankIcon}</if>
+            <if test="bankKey != null  and bankKey != ''"> and bank_key = #{bankKey}</if>
+            <if test="bankType != null  and bankType != ''"> and bank_type = #{bankType}</if>
+            <if test="bankStyle != null  and bankStyle != ''"> and bank_style = #{bankStyle}</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+
+    <select id="selectBankConfigById" parameterType="Long" resultMap="BankConfigResult">
+        <include refid="selectBankConfigVo"/>
+        where bank_config_id = #{bankConfigId}
+    </select>
+
+    <insert id="insertBankConfig" parameterType="com.nft.mall.domain.BankConfig" useGeneratedKeys="true" keyProperty="bankConfigId">
+        insert into t_bank_config
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bankName != null">bank_name,</if>
+            <if test="bankIcon != null">bank_icon,</if>
+            <if test="bankKey != null">bank_key,</if>
+            <if test="bankType != null">bank_type,</if>
+            <if test="bankStyle != null">bank_style,</if>
+            <if test="status != null">status,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="bankName != null">#{bankName},</if>
+            <if test="bankIcon != null">#{bankIcon},</if>
+            <if test="bankKey != null">#{bankKey},</if>
+            <if test="bankType != null">#{bankType},</if>
+            <if test="bankStyle != null">#{bankStyle},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBankConfig" parameterType="com.nft.mall.domain.BankConfig">
+        update t_bank_config
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="bankName != null">bank_name = #{bankName},</if>
+            <if test="bankIcon != null">bank_icon = #{bankIcon},</if>
+            <if test="bankKey != null">bank_key = #{bankKey},</if>
+            <if test="bankType != null">bank_type = #{bankType},</if>
+            <if test="bankStyle != null">bank_style = #{bankStyle},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where bank_config_id = #{bankConfigId}
+    </update>
+
+    <delete id="deleteBankConfigById" parameterType="Long">
+        delete from t_bank_config where bank_config_id = #{bankConfigId}
+    </delete>
+
+    <delete id="deleteBankConfigByIds" parameterType="String">
+        delete from t_bank_config where bank_config_id in
+        <foreach item="bankConfigId" collection="array" open="(" separator="," close=")">
+            #{bankConfigId}
+        </foreach>
+    </delete>
+</mapper>

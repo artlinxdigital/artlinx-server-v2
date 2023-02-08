@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nft.system.mapper.SysCertWithdrawMapper">
+
+    <resultMap type="com.nft.system.domain.SysCertWithdraw" id="SysCertWithdrawResult">
+        <result property="certificationWithdrawId"    column="certification_withdraw_id"    />
+        <result property="orderNumber"    column="order_number"    />
+        <result property="certificationId"    column="certification_id"    />
+        <result property="walletAddress"    column="wallet_address"    />
+        <result property="withdrawAccount"    column="withdraw_account"    />
+        <result property="withdrawAmount"    column="withdraw_amount"    />
+        <result property="withdrawType"    column="withdraw_type"    />
+        <result property="withdrawStatus"    column="withdraw_status"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectSysCertWithdrawVo">
+        select certification_withdraw_id, order_number, certification_id, wallet_address, withdraw_account, withdraw_amount, withdraw_type, withdraw_status, create_time, update_time from t_certification_withdraw
+    </sql>
+
+    <select id="selectSysCertWithdrawList" parameterType="com.nft.system.domain.SysCertWithdraw" resultMap="SysCertWithdrawResult">
+        select certification_withdraw_id, order_number, r.certification_id, r.wallet_address, r.withdraw_account, r.withdraw_amount, r.withdraw_type, r.withdraw_status, r.create_time from t_certification_withdraw r
+        left join t_certification c on r.certification_id = c.id
+        <where>
+            <if test="realName != null  and realName != ''"> and c.real_name like concat('%', #{realName}, '%')</if>
+            <if test="orderNumber != null  and orderNumber != ''"> and r.order_number like concat('%', #{orderNumber}, '%')</if>
+            <if test="walletAddress != null  and walletAddress != ''"> and r.wallet_address like concat('%', #{walletAddress}, '%')</if>
+            <if test="withdrawAccount != null  and withdrawAccount != ''"> and r.withdraw_account like concat('%', #{withdrawAccount}, '%')</if>
+            <if test="withdrawType != null "> and r.withdraw_type = #{withdrawType}</if>
+            <if test="withdrawStatus != null "> and r.withdraw_status = #{withdrawStatus}</if>
+        </where>
+    </select>
+
+    <select id="selectSysCertBillList" parameterType="com.nft.system.domain.SysCertWithdraw" resultMap="SysCertWithdrawResult">
+        select certification_withdraw_id, order_number, r.certification_id, r.wallet_address, r.withdraw_account, r.withdraw_amount, r.withdraw_type, r.withdraw_status, r.create_time from t_certification_withdraw r
+        left join t_certification c on r.certification_id = c.id
+        <where>
+            <if test="realName != null  and realName != ''"> and c.real_name like concat('%', #{realName}, '%')</if>
+            <if test="orderNumber != null  and orderNumber != ''"> and r.order_number like concat('%', #{orderNumber}, '%')</if>
+            <if test="walletAddress != null  and walletAddress != ''"> and r.wallet_address like concat('%', #{walletAddress}, '%')</if>
+            <if test="withdrawAccount != null  and withdrawAccount != ''"> and r.withdraw_account like concat('%', #{withdrawAccount}, '%')</if>
+            <if test="withdrawType != null "> and r.withdraw_type = #{withdrawType}</if>
+            <if test="withdrawStatus != null "> and r.withdraw_status = #{withdrawStatus}</if>
+            <if test="billTypeList != null and billTypeList.size() > 0">
+                and r.withdraw_type in
+                <foreach collection="billTypeList" item="billType" open="(" close=")" separator=",">
+                    #{billType}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="selectSysCertWithdrawById" parameterType="Long" resultMap="SysCertWithdrawResult">
+        <include refid="selectSysCertWithdrawVo"/>
+        where certification_withdraw_id = #{certificationWithdrawId}
+    </select>
+
+    <insert id="insertSysCertWithdraw" parameterType="com.nft.system.domain.SysCertWithdraw" useGeneratedKeys="true" keyProperty="certificationWithdrawId">
+        insert into t_certification_withdraw
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderNumber != null">order_number,</if>
+            <if test="certificationId != null">certification_id,</if>
+            <if test="walletAddress != null and walletAddress != ''">wallet_address,</if>
+            <if test="withdrawAccount != null and withdrawAccount != ''">withdraw_account,</if>
+            <if test="withdrawAmount != null">withdraw_amount,</if>
+            <if test="withdrawType != null">withdraw_type,</if>
+            <if test="withdrawStatus != null">withdraw_status,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderNumber != null">#{orderNumber},</if>
+            <if test="certificationId != null">#{certificationId},</if>
+            <if test="walletAddress != null and walletAddress != ''">#{walletAddress},</if>
+            <if test="withdrawAccount != null and withdrawAccount != ''">#{withdrawAccount},</if>
+            <if test="withdrawAmount != null">#{withdrawAmount},</if>
+            <if test="withdrawType != null">#{withdrawType},</if>
+            <if test="withdrawStatus != null">#{withdrawStatus},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateSysCertWithdraw" parameterType="com.nft.system.domain.SysCertWithdraw">
+        update t_certification_withdraw
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderNumber != null">order_number = #{orderNumber},</if>
+            <if test="certificationId != null">certification_id = #{certificationId},</if>
+            <if test="walletAddress != null and walletAddress != ''">wallet_address = #{walletAddress},</if>
+            <if test="withdrawAccount != null and withdrawAccount != ''">withdraw_account = #{withdrawAccount},</if>
+            <if test="withdrawAmount != null">withdraw_amount = #{withdrawAmount},</if>
+            <if test="withdrawType != null">withdraw_type = #{withdrawType},</if>
+            <if test="withdrawStatus != null">withdraw_status = #{withdrawStatus},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where certification_withdraw_id = #{certificationWithdrawId}
+    </update>
+
+    <delete id="deleteSysCertWithdrawById" parameterType="Long">
+        delete from t_certification_withdraw where certification_withdraw_id = #{certificationWithdrawId}
+    </delete>
+
+    <delete id="deleteSysCertWithdrawByIds" parameterType="String">
+        delete from t_certification_withdraw where certification_withdraw_id in
+        <foreach item="certificationWithdrawId" collection="array" open="(" separator="," close=")">
+            #{certificationWithdrawId}
+        </foreach>
+    </delete>
+</mapper>

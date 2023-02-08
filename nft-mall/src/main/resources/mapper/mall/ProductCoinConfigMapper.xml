@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nft.mall.mapper.ProductCoinConfigMapper">
+
+    <resultMap type="com.nft.mall.domain.ProductCoinConfig" id="ProductCoinConfigResult">
+        <result property="productCoinConfigId"    column="product_coin_config_id"    />
+        <result property="coinType"    column="coin_type"    />
+        <result property="coinName"    column="coin_name"    />
+        <result property="coinRate"    column="coin_rate"    />
+        <result property="createId"    column="create_id"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectProductCoinConfigVo">
+        select product_coin_config_id, coin_type, coin_name, coin_rate, create_id, create_time from t_product_coin_config
+    </sql>
+
+    <select id="selectProductCoinConfigList" parameterType="com.nft.mall.domain.ProductCoinConfig" resultMap="ProductCoinConfigResult">
+        <include refid="selectProductCoinConfigVo"/>
+        <where>
+            <if test="coinType != null "> and coin_type = #{coinType}</if>
+            <if test="coinName != null  and coinName != ''"> and coin_name like concat('%', #{coinName}, '%')</if>
+            <if test="coinRate != null "> and coin_rate = #{coinRate}</if>
+            <if test="createId != null "> and create_id = #{createId}</if>
+        </where>
+    </select>
+
+    <select id="selectProductCoinConfigById" parameterType="Long" resultMap="ProductCoinConfigResult">
+        <include refid="selectProductCoinConfigVo"/>
+        where product_coin_config_id = #{productCoinConfigId}
+    </select>
+
+    <insert id="insertProductCoinConfig" parameterType="com.nft.mall.domain.ProductCoinConfig" useGeneratedKeys="true" keyProperty="productCoinConfigId">
+        insert into t_product_coin_config
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="coinType != null">coin_type,</if>
+            <if test="coinName != null">coin_name,</if>
+            <if test="coinRate != null">coin_rate,</if>
+            <if test="createId != null">create_id,</if>
+            <if test="createTime != null">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="coinType != null">#{coinType},</if>
+            <if test="coinName != null">#{coinName},</if>
+            <if test="coinRate != null">#{coinRate},</if>
+            <if test="createId != null">#{createId},</if>
+            <if test="createTime != null">#{createTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateProductCoinConfig" parameterType="com.nft.mall.domain.ProductCoinConfig">
+        update t_product_coin_config
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="coinType != null">coin_type = #{coinType},</if>
+            <if test="coinName != null">coin_name = #{coinName},</if>
+            <if test="coinRate != null">coin_rate = #{coinRate},</if>
+            <if test="createId != null">create_id = #{createId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where product_coin_config_id = #{productCoinConfigId}
+    </update>
+
+    <delete id="deleteProductCoinConfigById" parameterType="Long">
+        delete from t_product_coin_config where product_coin_config_id = #{productCoinConfigId}
+    </delete>
+
+    <delete id="deleteProductCoinConfigByIds" parameterType="String">
+        delete from t_product_coin_config where product_coin_config_id in
+        <foreach item="productCoinConfigId" collection="array" open="(" separator="," close=")">
+            #{productCoinConfigId}
+        </foreach>
+    </delete>
+
+    <select id="selectByCoinType" parameterType="Integer" resultMap="ProductCoinConfigResult">
+        <include refid="selectProductCoinConfigVo"/>
+        where coin_type = #{coinType}
+    </select>
+</mapper>

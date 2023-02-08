@@ -1,0 +1,422 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nft.mall.mapper.ProductMapper">
+
+    <resultMap type="com.nft.mall.domain.Product" id="ProductResult">
+        <result property="productId" column="product_id"/>
+        <result property="productCategoryId" column="product_category_id"/>
+        <result property="price" column="price"/>
+        <result property="fileName" column="file_name"/>
+        <result property="fileSuffix" column="file_suffix"/>
+        <result property="coverImage" column="cover_image"/>
+        <result property="productName" column="product_name"/>
+        <result property="productAuthor" column="product_author"/>
+        <result property="productAuthorDesc" column="product_author_desc"/>
+        <result property="productImage" column="product_image"/>
+        <result property="productDesc" column="product_desc"/>
+        <result property="serviceRate" column="service_rate"/>
+        <result property="copyrightRate" column="copyright_rate"/>
+        <result property="favoriteCount" column="favorite_count"/>
+        <result property="collectionCount" column="collection_count"/>
+        <result property="productType" column="product_type"/>
+        <result property="productFrom" column="product_from"/>
+        <result property="status" column="status"/>
+        <result property="createId" column="create_id"/>
+        <result property="parentProductId" column="parent_product_id"/>
+        <result property="sourceProductId" column="source_product_id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+
+        <result property="coinType" column="coin_type"/>
+        <result property="signatureLeft" column="signature_left"/>
+        <result property="orderLeft" column="order_left"/>
+        <result property="remark" column="remark"/>
+        <!--        <if test="coinType != null ">and coin_type = #{coinType}</if>-->
+        <!--        <if test="signatureLeft != null ">and signature_left = #{signatureLeft}</if>-->
+        <!--        <if test="orderLeft != null ">and order_left = #{orderLeft}</if>-->
+        <!--        <if test="remark != null ">and remark = #{remark}</if>-->
+    </resultMap>
+
+    <sql id="selectProductVo">
+        select product_id,
+               product_category_id,
+               file_name,
+               file_suffix,
+               cover_image,
+               price,
+               product_name,
+               product_author,
+               product_author_desc,
+               product_image,
+               product_desc,
+               service_rate,
+               copyright_rate,
+               favorite_count,
+               collection_count,
+               product_type,
+               product_from,
+               status,
+               create_id,
+               parent_product_id,
+               source_product_id,
+               create_time,
+               update_time,
+               remark
+        from t_product
+    </sql>
+    <sql id="selectProductVoCON">
+        SELECT t_product.product_id          AS product_id,
+               t_product.product_category_id AS product_category_id,
+               t_product.file_name           AS file_name,
+               t_product.file_suffix         AS file_suffix,
+               t_product.cover_image         AS cover_image,
+               t_product.price               AS price,
+               t_product.product_name        AS product_name,
+               t_product.product_author      AS product_author,
+               t_product.product_author_desc AS product_author_desc,
+               t_product.product_image       AS product_image,
+               t_product.product_desc        AS product_desc,
+               t_product.service_rate        AS service_rate,
+               t_product.copyright_rate      AS copyright_rate,
+               t_product.favorite_count      AS favorite_count,
+               t_product.collection_count    AS collection_count,
+               t_product.product_type        AS product_type,
+               t_product.product_from        AS product_from,
+               t_product.STATUS              AS STATUS,
+               t_product.create_id           AS create_id,
+               t_product.parent_product_id   AS parent_product_id,
+               t_product.source_product_id   AS source_product_id,
+               t_product.create_time         AS create_time,
+               t_product.update_time         AS update_time,
+               t_product_token.coin_type     AS coin_type
+        FROM t_product
+                 LEFT JOIN (
+            SELECT *
+            FROM (SELECT * FROM t_product_token ORDER BY t_product_token.create_time DESC LIMIT 9999) AS TEMPTABLE
+            GROUP BY product_id
+        ) t_product_token ON t_product.product_id = t_product_token.product_id
+    </sql>
+
+    <select id="selectProductList" parameterType="com.nft.mall.domain.Product" resultMap="ProductResult">
+        <include refid="selectProductVo"/>
+        <where>
+            <if test="productCategoryId != null ">and product_category_id = #{productCategoryId}</if>
+            <if test="fileName != null ">and file_name = #{fileName}</if>
+            <if test="fileSuffix != null ">and file_suffix = #{fileSuffix}</if>
+            <if test="coverImage != null ">and cover_image = #{coverImage}</if>
+            <if test="price != null ">and price = #{price}</if>
+            <if test="productName != null  and productName != ''">and product_name like concat('%', #{productName},
+                '%')
+            </if>
+            <if test="productAuthor != null  and productAuthor != ''">and product_author = #{productAuthor}</if>
+            <if test="productAuthorDesc != null  and productAuthorDesc != ''">and product_author_desc =
+                #{productAuthorDesc}
+            </if>
+            <if test="productImage != null  and productImage != ''">and product_image = #{productImage}</if>
+            <if test="productDesc != null  and productDesc != ''">and product_desc = #{productDesc}</if>
+            <if test="serviceRate != null ">and service_rate = #{serviceRate}</if>
+            <if test="copyrightRate != null ">and copyright_rate = #{copyrightRate}</if>
+            <if test="favoriteCount != null ">and favorite_count = #{favoriteCount}</if>
+            <if test="collectionCount != null ">and collection_count = #{collectionCount}</if>
+            <if test="productType != null ">and product_type = #{productType}</if>
+            <if test="productFrom != null ">and product_from = #{productFrom}</if>
+            <if test="status != null ">and status = #{status}</if>
+            <if test="createId != null ">and create_id = #{createId}</if>
+            <if test="parentProductId != null ">and parent_product_id = #{parentProductId}</if>
+            <if test="sourceProductId != null ">and source_product_id = #{sourceProductId}</if>
+        </where>
+    </select>
+
+    <select id="selectProductById" parameterType="Long" resultMap="ProductResult">
+        <include refid="selectProductVo"/>
+        where product_id = #{productId}
+    </select>
+
+    <select id="selectProductByAuthor" parameterType="String" resultMap="ProductResult">
+        <include refid="selectProductVo"/>
+        where product_author = #{productAuthor}
+        limit 1
+    </select>
+
+    <select id="selectProductListByArt" parameterType="String" resultType="com.nft.mall.domain.vo.ProductAuthorVO">
+        select
+            product_author AS author,
+            product_author_desc AS authorDesc
+        from t_product
+        where product_author like concat('%', #{artName}, '%')
+        GROUP BY author, product_author_desc
+    </select>
+
+    <insert id="insertProduct" parameterType="com.nft.mall.domain.Product" useGeneratedKeys="true"
+            keyProperty="productId">
+        insert into t_product
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="productCategoryId != null">product_category_id,</if>
+            <if test="fileName != null">file_name,</if>
+            <if test="fileSuffix != null">file_suffix,</if>
+            <if test="coverImage != null">cover_image,</if>
+            <if test="price != null">price,</if>
+            <if test="productName != null">product_name,</if>
+            <if test="productAuthor != null">product_author,</if>
+            <if test="productAuthorDesc != null">product_author_desc,</if>
+            <if test="productImage != null">product_image,</if>
+            <if test="productDesc != null">product_desc,</if>
+            <if test="serviceRate != null">service_rate,</if>
+            <if test="copyrightRate != null">copyright_rate,</if>
+            <if test="favoriteCount != null">favorite_count,</if>
+            <if test="collectionCount != null">collection_count,</if>
+            <if test="productType != null">product_type,</if>
+            <if test="productFrom != null">product_from,</if>
+            <if test="status != null">status,</if>
+            <if test="createId != null">create_id,</if>
+            <if test="parentProductId != null">parent_product_id,</if>
+            <if test="sourceProductId != null">source_product_id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="productCategoryId != null">#{productCategoryId},</if>
+            <if test="fileName != null">#{fileName},</if>
+            <if test="fileSuffix != null">#{fileSuffix},</if>
+            <if test="coverImage != null">#{coverImage},</if>
+            <if test="price != null">#{price},</if>
+            <if test="productName != null">#{productName},</if>
+            <if test="productAuthor != null">#{productAuthor},</if>
+            <if test="productAuthorDesc != null">#{productAuthorDesc},</if>
+            <if test="productImage != null">#{productImage},</if>
+            <if test="productDesc != null">#{productDesc},</if>
+            <if test="serviceRate != null">#{serviceRate},</if>
+            <if test="copyrightRate != null">#{copyrightRate},</if>
+            <if test="favoriteCount != null">#{favoriteCount},</if>
+            <if test="collectionCount != null">#{collectionCount},</if>
+            <if test="productType != null">#{productType},</if>
+            <if test="productFrom != null">#{productFrom},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createId != null">#{createId},</if>
+            <if test="parentProductId != null">#{parentProductId},</if>
+            <if test="sourceProductId != null">#{sourceProductId},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="updateProduct" parameterType="com.nft.mall.domain.Product">
+        update t_product
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="productCategoryId != null">product_category_id = #{productCategoryId},</if>
+            <if test="fileName != null">file_name = #{fileName},</if>
+            <if test="fileSuffix != null">file_suffix = #{fileSuffix},</if>
+            <if test="coverImage != null">cover_image = #{coverImage},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="productName != null">product_name = #{productName},</if>
+            <if test="productAuthor != null">product_author = #{productAuthor},</if>
+            <if test="productAuthorDesc != null">product_author_desc = #{productAuthorDesc},</if>
+            <if test="productImage != null">product_image = #{productImage},</if>
+            <if test="productDesc != null">product_desc = #{productDesc},</if>
+            <if test="serviceRate != null">service_rate = #{serviceRate},</if>
+            <if test="copyrightRate != null">copyright_rate = #{copyrightRate},</if>
+            <if test="favoriteCount != null">favorite_count = #{favoriteCount},</if>
+            <if test="collectionCount != null">collection_count = #{collectionCount},</if>
+            <if test="productType != null">product_type = #{productType},</if>
+            <if test="productFrom != null">product_from = #{productFrom},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createId != null">create_id = #{createId},</if>
+            <if test="parentProductId != null">parent_product_id = #{parentProductId},</if>
+            <if test="sourceProductId != null">source_product_id = #{sourceProductId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where product_id = #{productId}
+    </update>
+
+    <delete id="deleteProductById" parameterType="Long">
+        delete
+        from t_product
+        where product_id = #{productId}
+    </delete>
+
+    <delete id="deleteProductByIds" parameterType="String">
+        delete from t_product where product_id in
+        <foreach item="productId" collection="array" open="(" separator="," close=")">
+            #{productId}
+        </foreach>
+    </delete>
+
+    <select id="selectCollectionList" parameterType="com.nft.common.core.domain.pojo.collect.CollectionSearchParam"
+            resultMap="ProductResult">
+        <include refid="selectProductVo"/>
+        <where>
+            <if test="productCategoryId != null and  productCategoryId > 0">and product_category_id =
+                #{productCategoryId}
+            </if>
+
+            <if test="keyword != null  and keyword != ''">and (
+                product_name like concat('%', #{keyword}, '%') or
+                product_author like concat('%', #{keyword}, '%') or
+                product_desc like concat('%', #{keyword}, '%')
+                )
+            </if>
+            <if test="status != null ">and status = #{status}</if>
+            <if test="certificationId != null and  certificationId > 0">and create_id = #{certificationId}</if>
+            <if test="statusSet != null and statusSet.size() > 0">
+                and status in
+                <foreach collection="statusSet" item="status" open="(" close=")" separator=",">
+                    #{status}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="selectCollectionListCON" parameterType="com.nft.common.core.domain.pojo.collect.CollectionSearchParam"
+            resultMap="ProductResult">
+        <include refid="selectProductVoCON"/>
+        <where>
+            <if test="productCategoryId != null and  productCategoryId > 0">and product_category_id =
+                #{productCategoryId}
+            </if>
+
+            <if test="keyword != null  and keyword != ''">and (
+                t_product.product_name like concat('%', #{keyword}, '%') or
+                t_product.product_author like concat('%', #{keyword}, '%') or
+                t_product.product_desc like concat('%', #{keyword}, '%')
+                )
+            </if>
+            <if test="status != null ">and t_product.status = #{status}</if>
+            <if test="certificationId != null and  certificationId > 0">and t_product.source_product_id =
+                #{certificationId}
+            </if>
+
+            <if test="statusSet != null and statusSet.size() > 0">
+                and t_product.status in
+                <foreach collection="statusSet" item="status" open="(" close=")" separator=",">
+                    #{status}
+                </foreach>
+            </if>
+
+            <if test="certIdSet != null and certIdSet.size() > 0">
+                or t_product.source_product_id in
+                <foreach collection="certIdSet" item="sourceProductId" open="(" close=")" separator=",">
+                    #{sourceProductId}
+                </foreach>
+            </if>
+        </where>
+
+    </select>
+
+    <select id="selectProductByIdAndCategoryIdAndCreateId" resultMap="ProductResult">
+        <include refid="selectProductVo"/>
+        <where>
+            <if test="productId != null ">and product_id != #{productId}</if>
+            <if test="productCategoryId != null and  productCategoryId > 0">and product_category_id =
+                #{productCategoryId}
+            </if>
+            <if test="status != null ">and status = #{status}</if>
+            <if test="createId != null and  createId > 0">and create_id != #{createId}</if>
+        </where>
+    </select>
+
+    <select id="selectProductByIdAndAuthor" resultMap="ProductResult">
+        <include refid="selectProductVoCON"/>
+        <where>
+            <if test="productId != null ">and t_product.product_id != #{productId}</if>
+            <if test="status != null ">and t_product.status = #{status}</if>
+            <if test="createId != null and  createId > 0">and t_product.create_id = #{createId}</if>
+            <if test="sourceProductId != null and  sourceProductId > 0">and t_product.source_product_id = #{sourceProductId}</if>
+        </where>
+    </select>
+
+    <select id="selectByProductIdSet" parameterType="Long" resultMap="ProductResult">
+        <include refid="selectProductVoCON"/>
+        where t_product.product_id in
+        <foreach item="productId" collection="productIdSet" open="(" separator="," close=")">
+            #{productId}
+        </foreach>
+    </select>
+
+    <select id="selectByParentProductId" parameterType="Long" resultMap="ProductResult">
+        <include refid="selectProductVo"/>
+        where parent_product_id = #{parentProductId}
+    </select>
+
+    <select id="selectByParentProductIdSetAndStatusSet" parameterType="Long" resultMap="ProductResult">
+        <include refid="selectProductVo"/>
+        where parent_product_id in
+        <foreach item="parentProductId" collection="parentProductIdSet" open="(" separator="," close=")">
+            #{parentProductId}
+        </foreach>
+        and status in
+        <foreach item="status" collection="statusSet" open="(" separator="," close=")">
+            #{status}
+        </foreach>
+    </select>
+
+    <select id="selectByCreateIdSetAndStatusSet" parameterType="Long" resultMap="ProductResult">
+        <include refid="selectProductVo"/>
+        where create_id in
+        <foreach item="createId" collection="createIdSet" open="(" separator="," close=")">
+            #{createId}
+        </foreach>
+        and status in
+        <foreach item="status" collection="statusSet" open="(" separator="," close=")">
+            #{status}
+        </foreach>
+    </select>
+    <select id="selectByCreateIdSetAndsourceProductIdSet" parameterType="Long" resultMap="ProductResult">
+        <include refid="selectProductVo"/>
+        where create_id in
+        <foreach item="createId" collection="createIdSet" open="(" separator="," close=")">
+            #{createId}
+        </foreach>
+        and source_product_id != create_id
+    </select>
+    <select id="selectByCreateIdSetAndsourceProductIdSet1" parameterType="Long" resultMap="ProductResult">
+        <include refid="selectProductVo"/>
+        where source_product_id in
+        <foreach item="createId" collection="createIdSet" open="(" separator="," close=")">
+            #{createId}
+        </foreach>
+        <!--        <if test="sourceProductId != null and  sourceProductId == 0">and source_product_id = create_id </if>-->
+        <!--        <if test="sourceProductId != null and  sourceProductId == 1">and source_product_id != create_id</if>-->
+    </select>
+
+    <select id="selectByCreateIdSetAndStatusSet1" parameterType="Long" resultMap="ProductResult">
+        <include refid="selectProductVo"/>
+        where create_id in
+        <foreach item="createId" collection="createIdSet" open="(" separator="," close=")">
+            #{createId}
+        </foreach>
+        and status in
+        <foreach item="status" collection="statusSet" open="(" separator="," close=")">
+            #{status}
+        </foreach>
+        and product_id in
+        <foreach item="productId" collection="idSet" open="(" separator="," close=")">
+            #{productId}
+        </foreach>
+    </select>
+
+    <update id="revokeProduct">
+        update t_product
+        set status = #{toStatus}
+        where product_id = #{productId}
+          and source_product_id = #{certificationId}
+          and status = #{fromStatus}
+    </update>
+
+    <select id="countAllProduct" resultType="java.lang.String">
+	    SELECT FORMAT(count(1), 0) from t_product
+	</select>
+
+    <select id="countToadyProduct" resultType="java.lang.String">
+	    SELECT FORMAT(count(1), 0) from t_product where create_time BETWEEN CONCAT(CURDATE(),' 00:00:00') AND CONCAT(CURDATE(),' 23:59:59')
+	</select>
+
+    <select id="sumAllProduct" resultType="java.lang.String">
+	    SELECT FORMAT(SUM(price), 0) from t_product
+	</select>
+
+</mapper>

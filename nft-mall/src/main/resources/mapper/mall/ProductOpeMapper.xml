@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nft.mall.mapper.ProductOpeMapper">
+
+    <resultMap type="com.nft.mall.domain.ProductOpe" id="ProductOpeResult">
+        <result property="productOpeId"    column="product_ope_id"    />
+        <result property="productId"    column="product_id"    />
+        <result property="certificationId"    column="certification_id"    />
+        <result property="opeType"    column="ope_type"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectProductOpeVo">
+        select product_ope_id, product_id, certification_id, ope_type, create_time from t_product_ope
+    </sql>
+
+    <select id="selectProductOpeList" parameterType="com.nft.mall.domain.ProductOpe" resultMap="ProductOpeResult">
+        <include refid="selectProductOpeVo"/>
+        <where>
+            <if test="productId != null "> and product_id = #{productId}</if>
+            <if test="certificationId != null "> and certification_id = #{certificationId}</if>
+            <if test="opeType != null "> and ope_type = #{opeType}</if>
+        </where>
+    </select>
+
+    <select id="selectProductOpeById" parameterType="Long" resultMap="ProductOpeResult">
+        <include refid="selectProductOpeVo"/>
+        where product_ope_id = #{productOpeId}
+    </select>
+
+    <insert id="insertProductOpe" parameterType="com.nft.mall.domain.ProductOpe" useGeneratedKeys="true" keyProperty="productOpeId">
+        insert into t_product_ope
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="productId != null">product_id,</if>
+            <if test="certificationId != null">certification_id,</if>
+            <if test="opeType != null">ope_type,</if>
+            <if test="createTime != null">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="productId != null">#{productId},</if>
+            <if test="certificationId != null">#{certificationId},</if>
+            <if test="opeType != null">#{opeType},</if>
+            <if test="createTime != null">#{createTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateProductOpe" parameterType="com.nft.mall.domain.ProductOpe">
+        update t_product_ope
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="productId != null">product_id = #{productId},</if>
+            <if test="certificationId != null">certification_id = #{certificationId},</if>
+            <if test="opeType != null">ope_type = #{opeType},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where product_ope_id = #{productOpeId}
+    </update>
+
+    <delete id="deleteProductOpeById" parameterType="Long">
+        delete from t_product_ope where product_ope_id = #{productOpeId}
+    </delete>
+
+    <delete id="deleteProductOpeByIds" parameterType="String">
+        delete from t_product_ope where product_ope_id in
+        <foreach item="productOpeId" collection="array" open="(" separator="," close=")">
+            #{productOpeId}
+        </foreach>
+    </delete>
+
+    <select id="selectByProductIdAndCertificationIdAndType" resultMap="ProductOpeResult">
+        <include refid="selectProductOpeVo"/>
+        where product_id = #{productId} and certification_id = #{certificationId} and ope_type = #{opeType}
+    </select>
+
+    <delete id="delByProductIdAndCertificationIdAndType">
+        delete from t_product_ope
+        where product_id = #{productId} and certification_id = #{certificationId} and ope_type = #{opeType}
+    </delete>
+
+    <select id="selectByProductIdSet" parameterType="Long" resultMap="ProductOpeResult">
+        <include refid="selectProductOpeVo"/> where product_id in
+        <foreach item="productId" collection="productIdSet" open="(" separator="," close=")">
+            #{productId}
+        </foreach>
+    </select>
+
+    <select id="selectByCertificationIdSetAndTypeSet" parameterType="Long" resultMap="ProductOpeResult">
+        <include refid="selectProductOpeVo"/> where certification_id in
+        <foreach item="certificationId" collection="certificationIdSet" open="(" separator="," close=")">
+            #{certificationId}
+        </foreach>
+        and ope_type in
+        <foreach item="opeType" collection="opeTypeSet" open="(" separator="," close=")">
+            #{opeType}
+        </foreach>
+    </select>
+</mapper>

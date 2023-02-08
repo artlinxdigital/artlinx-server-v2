@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nft.mall.mapper.ProductTokenMapper">
+
+    <resultMap type="com.nft.mall.domain.ProductToken" id="ProductTokenResult">
+        <result property="productTokenId" column="product_token_id"/>
+        <result property="productId" column="product_id"/>
+        <result property="tokenId" column="token_id"/>
+        <result property="collectDirId" column="collect_dir_id"/>
+        <result property="fee" column="fee"/>
+        <result property="tradeHash" column="trade_hash"/>
+        <result property="opeType"    column="ope_type"    />
+        <result property="status" column="status"/>
+        <result property="createId" column="create_id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+
+        <result property="coinType" column="coin_type"/>
+        <result property="signatureLeft" column="signature_left"/>
+        <result property="orderLeft" column="order_left"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+    <sql id="selectProductTokenVo">
+        select product_token_id,
+               product_id,
+               token_id,
+               collect_dir_id,
+               fee,
+               trade_hash,
+               status,
+               create_id,
+               create_time,
+               update_time,
+               ope_type,
+               coin_type,
+               signature_left,
+               order_left,
+               remark
+        from t_product_token
+    </sql>
+
+    <select id="selectProductTokenList" parameterType="com.nft.mall.domain.ProductToken" resultMap="ProductTokenResult">
+        <include refid="selectProductTokenVo"/>
+        <where>
+            <if test="productId != null ">and product_id = #{productId}</if>
+            <if test="tokenId != null ">and token_id = #{tokenId}</if>
+            <if test="collectDirId != null ">and collect_dir_id = #{collectDirId}</if>
+            <if test="fee != null ">and fee = #{fee}</if>
+            <if test="opeType != null "> and ope_type = #{opeType}</if>
+            <if test="tradeHash != null ">and trade_hash = #{tradeHash}</if>
+            <if test="status != null ">and status = #{status}</if>
+            <if test="createId != null ">and create_id = #{createId}</if>
+
+            <if test="coinType != null ">and coin_type = #{coinType}</if>
+            <if test="signatureLeft != null ">and signature_left = #{signatureLeft}</if>
+            <if test="orderLeft != null ">and order_left = #{orderLeft}</if>
+            <if test="remark != null ">and remark = #{remark}</if>
+        </where>
+    </select>
+
+    <select id="selectProductTokenById" parameterType="Long" resultMap="ProductTokenResult">
+        <include refid="selectProductTokenVo"/>
+        where product_token_id = #{productTokenId}
+    </select>
+
+    <insert id="insertProductToken" parameterType="com.nft.mall.domain.ProductToken" useGeneratedKeys="true"
+            keyProperty="productTokenId">
+        insert into t_product_token
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="productId != null">product_id,</if>
+            <if test="tokenId != null">token_id,</if>
+            <if test="collectDirId != null">collect_dir_id,</if>
+            <if test="fee != null">fee,</if>
+            <if test="tradeHash != null">trade_hash,</if>
+            <if test="status != null">status,</if>
+            <if test="opeType != null">ope_type,</if>
+            <if test="createId != null">create_id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="coinType != null ">coin_type ,</if>
+            <if test="signatureLeft != null ">signature_left,</if>
+            <if test="orderLeft != null ">order_left,</if>
+            <if test="remark != null ">remark ,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="productId != null">#{productId},</if>
+            <if test="tokenId != null">#{tokenId},</if>
+            <if test="collectDirId != null">#{collectDirId},</if>
+            <if test="fee != null">#{fee},</if>
+            <if test="tradeHash != null">#{tradeHash},</if>
+            <if test="status != null">#{status},</if>
+            <if test="opeType != null">#{opeType},</if>
+            <if test="createId != null">#{createId},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="coinType != null ">#{coinType},</if>
+            <if test="signatureLeft != null ">#{signatureLeft},</if>
+            <if test="orderLeft != null ">#{orderLeft},</if>
+            <if test="remark != null ">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="updateProductToken" parameterType="com.nft.mall.domain.ProductToken">
+        update t_product_token
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="productId != null">product_id = #{productId},</if>
+            <if test="tokenId != null">token_id = #{tokenId},</if>
+            <if test="collectDirId != null">collect_dir_id = #{collectDirId},</if>
+            <if test="fee != null">fee = #{fee},</if>
+            <if test="tradeHash != null">trade_hash = #{tradeHash},</if>
+            <if test="opeType != null">ope_type = #{opeType},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createId != null">create_id = #{createId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="coinType != null ">coin_type = #{coinType} ,</if>
+            <if test="signatureLeft != null ">signature_left = #{signatureLeft},</if>
+            <if test="orderLeft != null ">order_left = #{orderLeft} ,</if>
+            <if test="remark != null ">remark = #{remark} ,</if>
+        </trim>
+        where product_token_id = #{productTokenId}
+    </update>
+
+    <delete id="deleteProductTokenById" parameterType="Long">
+        delete
+        from t_product_token
+        where product_token_id = #{productTokenId}
+    </delete>
+
+    <delete id="deleteProductTokenByIds" parameterType="String">
+        delete from t_product_token where product_token_id in
+        <foreach item="productTokenId" collection="array" open="(" separator="," close=")">
+            #{productTokenId}
+        </foreach>
+    </delete>
+
+    <select id="selectByProductId" parameterType="Long" resultMap="ProductTokenResult">
+        <include refid="selectProductTokenVo"/>
+        where product_id = #{productId}
+    </select>
+
+    <select id="selectCollectionDirList" parameterType="com.nft.common.core.domain.pojo.collect.CollectionDirParam"
+            resultMap="ProductTokenResult">
+        <include refid="selectProductTokenVo"/>
+        <where>
+            <if test="certificationId != null and  certificationId > 0">and create_id = #{certificationId}</if>
+        </where>
+        group by create_id
+    </select>
+
+    <select id="selectByTokenId" parameterType="String" resultMap="ProductTokenResult">
+        <include refid="selectProductTokenVo"/>
+        where token_id = #{tokenId}
+    </select>
+</mapper>
